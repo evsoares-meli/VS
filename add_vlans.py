@@ -86,6 +86,6 @@ class ProvisionBackbonePOP (Script):
 			vlan = self.create_mgmt_vlan (site, site_no, i, name, sitetenant, tenantgroup)
 
 ################################################################################
-#                                 Falta Inserir GP e Dsc                                      #
+#                                 Falta Inserir GP e Dsc                       #
 ################################################################################
 
