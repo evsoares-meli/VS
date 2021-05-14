@@ -36,6 +36,7 @@ class ProvisionBackbonePOP (Script):
 		query_params={
 			'Site_id': '$site'
 		}
+		default=''
 	)
 	tenant_group = ObjectVar(
 		model=TenantGroup
