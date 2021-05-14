@@ -69,7 +69,7 @@ class ProvisionBackbonePOP (Script):
 			name = f"{name}{V}",
 			vid = vlan_id,
 			tenant = sitetenant,
-			vlangroup = vlangroup
+			vgroup = vlangroup
 		)
 		vlan.save ()
 		self.log_success ("Created mgmt VLAN %s" % vlan)
