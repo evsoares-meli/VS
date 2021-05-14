@@ -61,25 +61,24 @@ class ProvisionBackbonePOP (Script):
 		vlangroup = data['vlan_group']
 		# Set up POP Mgmt VLAN
 		for i in range(1,10):
-			
-		vlan_id = i
-		try:
-			vlan = VLAN.objects.get (site = site, vid = vlan_id)
-			self.log_info ("Mgmt vlan %s already present, carrying on." % vlan)
+			vlan_id = i
+			try:
+				vlan = VLAN.objects.get (site = site, vid = vlan_id)
+				self.log_info ("Mgmt vlan %s already present, carrying on." % vlan)
 
-			return vlan
-		except VLAN.DoesNotExist:
-			pass
+				return vlan
+			except VLAN.DoesNotExist:
+				pass
 
-		i_str = str(i)
-		V = str(i_str.zfill(3))
-		vlan = VLAN (
-			site = site,
-			name = f"{name}{V}",
-			vid = vlan_id,
-			tenant = sitetenant,
-			vgroup = vlangroup
-		)
+			i_str = str(i)
+			V = str(i_str.zfill(3))
+			vlan = VLAN (
+				site = site,
+				name = f"{name}{V}",
+				vid = vlan_id,
+				tenant = sitetenant,
+				vgroup = vlangroup
+			)
 		vlan.save ()
 		self.log_success ("Created mgmt VLAN %s" % vlan)
 
