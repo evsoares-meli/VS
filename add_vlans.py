@@ -52,7 +52,7 @@ class ProvisionBackbonePOP (Script):
 #                                 Methods                                      #
 ################################################################################
 
-	def create_mgmt_vlan (self, site, site_no, i, name, sitetenant, tenantgroup):
+	def create_mgmt_vlan (self, site, site_no, i, name, sitetenant, vlangroup):
 		vlan_id = i
 		try:
 			vlan = VLAN.objects.get (site = site, vid = vlan_id)
@@ -69,7 +69,7 @@ class ProvisionBackbonePOP (Script):
 			name = f"{name}{V}",
 			vid = vlan_id,
 			tenant = sitetenant,
-			tenantgroup = tenantgroup
+			vlangroup = vlangroup
 		)
 		vlan.save ()
 		self.log_success ("Created mgmt VLAN %s" % vlan)
@@ -81,10 +81,10 @@ class ProvisionBackbonePOP (Script):
 		site_no = data['site_no']
 		name = data['vlan_name']
 		sitetenant = data['site_tenant']
-		tenantgroup = data['tenant_group']
+		vlangroup = data['vlan_group']
 		# Set up POP Mgmt VLAN
 		for i in range(1,10):
-			vlan = self.create_mgmt_vlan (site, site_no, i, name, sitetenant, tenantgroup)
+			vlan = self.create_mgmt_vlan (site, site_no, i, name, sitetenant, vlangroup)
 
 ################################################################################
 #                                 Falta Inserir GP e Dsc                       #
