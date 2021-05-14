@@ -59,6 +59,7 @@ class ProvisionBackbonePOP (Script):
 		site_no = data['site_no']
 		name = data['vlan_name']
 		sitetenant = data['site_tenant']
+		vlangroup = data['vlan_group']
 		# Set up POP Mgmt VLAN
 		for i in range(1,10):
 			vlan_id = i
@@ -77,7 +78,7 @@ class ProvisionBackbonePOP (Script):
 				name = f"{name}{V}",
 				vid = vlan_id,
 				tenant = sitetenant,
-				#vlangroup = data['vlan_group']
+				#vgroup = vlangroup
 			)
 			vlan.save ()
 			self.log_success ("Created mgmt VLAN %s" % vlan)
