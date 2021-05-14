@@ -5,7 +5,7 @@ from dcim.models import Cable, Device, DeviceRole, DeviceType, Platform, Rack, R
 #from dcim.models.device_components import FrontPort, Interface, RearPort
 from tenancy.models import TenantGroup, Tenant
 from ipam.choices import *
-from ipam.models import IPAddress, Prefix, Role, VLAN
+from ipam.models import IPAddress, Prefix, Role, VLAN, VLANGroup
 
 from extras.scripts import *
 ##TESTE##
