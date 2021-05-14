@@ -35,7 +35,7 @@ class ProvisionBackbonePOP (Script):
 		model= VLANGroup,
 		query_params={
 			'Site_id': '$site'
-		}
+		},
 		default=''
 	)
 	tenant_group = ObjectVar(
