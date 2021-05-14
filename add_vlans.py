@@ -3,7 +3,7 @@ from django.utils.text import slugify
 from dcim.choices import *
 from dcim.models import Cable, Device, DeviceRole, DeviceType, Platform, Rack, RackRole, Site
 #from dcim.models.device_components import FrontPort, Interface, RearPort
-
+from tenancy.models import TenantGroup, Tenant
 from ipam.choices import *
 from ipam.models import IPAddress, Prefix, Role, VLAN
 
