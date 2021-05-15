@@ -92,7 +92,7 @@ class ProvisionBackbonePOP (Script):
 		for vlan in VLAN.objects.filter(site=vlan.site):
 			attrs = [
 				vlan.name,
-				vlan.vid.name,
+				vlan.V.name,
 				vlan.tenant.name,
 				vlan.tenant.name
 			]
