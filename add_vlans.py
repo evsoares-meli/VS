@@ -89,14 +89,14 @@ class ProvisionVlans (Script):
 			desc = vdescription[i]
 			vlan = self.create_mgmt_vlan (site, vlanrange, name, sitetenant, vlangroup, desc)
 		output = [
-			'name,tenant,group,description'
+			'name,tenant,description'
 		]
 		for vlan in VLAN.objects.filter(site=vlan.site):
 
 			attrs = [
 				vlan.name,
+				vlan.scope_id
 				vlan.description,
-				vlan.ID,
 				vlan.tenant.name
 			]
 			output.append(','.join(attrs))
