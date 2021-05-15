@@ -10,10 +10,10 @@ from ipam.models import IPAddress, Prefix, Role, VLAN, VLANGroup
 from extras.scripts import *
 ##TESTE##
 
-class ProvisionBackbonePOP (Script):
+class ProvisionVlans (Script):
 	class Meta:
-		name = "Provision Backbone POP"
-		description = "Provision a new backbone POP"
+		name = "Provision Vlans"
+		description = "Provision multiples Vlans to a Site"
 		field_order = ['site', 'site_no']
 		#commit_default = False
 
@@ -48,16 +48,16 @@ class ProvisionBackbonePOP (Script):
 			'group_id': '$tenant_group'
 		}
 	)
-################################################################################
-# addded               
-#                  Methods                                      #
+	vlan_range = ['10','20','30','40','50','70','80','100','150','300','310']
+################################################################################             
+#                  Methods                                                    #
 ################################################################################
 
 	def create_mgmt_vlan (self, site, site_no, i, name, sitetenant, vlangroup):
 		vlan_id = i
 		try:
 			vlan = VLAN.objects.get (site = site, vid = vlan_id)
-			self.log_info ("Mgmt vlan %s already present, carrying on." % vlan)
+			self.log_info ("Vlan %s already present, carrying on." % vlan)
 
 			return vlan
 		except VLAN.DoesNotExist:
@@ -69,11 +69,11 @@ class ProvisionBackbonePOP (Script):
 			site = site,
 			name = f"{name}{V}",
 			vid = vlan_id,
-#	#		vgroup = vlangroup,
+#			vgroup = vlangroup,
 			tenant = sitetenant
 		)
 		vlan.save ()
-		self.log_success ("Created mgmt VLAN %s" % vlan)
+		self.log_success ("Created VLAN %s" % vlan)
 
 		return vlan
 
@@ -84,16 +84,16 @@ class ProvisionBackbonePOP (Script):
 		sitetenant = data['site_tenant']
 		vlangroup = data['vlan_group']
 		# Set up POP Mgmt VLAN
-		for i in range(1,10):
+		for i in vlan_range:
 			vlan = self.create_mgmt_vlan (site, site_no, i, name, sitetenant, vlangroup)
 		output = [
-			'name,vid'
+			'name,'
 		]
 		for vlan in VLAN.objects.filter(site=vlan.site):
 			attrs = [
 				vlan.name,
-				vlan.V.name,
-				vlan.tenant.name,
+#				vlan.V.name,
+#				vlan.vgroup.name,
 				vlan.tenant.name
 			]
 			output.append(','.join(attrs))
