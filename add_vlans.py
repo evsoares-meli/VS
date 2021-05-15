@@ -86,17 +86,17 @@ class ProvisionBackbonePOP (Script):
 		# Set up POP Mgmt VLAN
 		for i in range(1,10):
 			vlan = self.create_mgmt_vlan (site, site_no, i, name, sitetenant, vlangroup)
-		output = [
-			'name,vid'
-		]
-		for vlan in VLAN.objects.filter(site=vlan.site):
-			attrs = [
-				vlan.name,
-				vlan.vid
+			output = [
+				'name,vid'
 			]
-			output.append(','.join(attrs))
+			for vlan in VLAN.objects.filter(site=vlan.site):
+				attrs = [
+					vlan.name,
+					vlan.vid
+				]
+				output.append(','.join(attrs))
 
-		return '\n'.join(output)
+			return '\n'.join(output)
 ################################################################################
 #                                 Falta Inserir GP e Dsc                       #
 ################################################################################
