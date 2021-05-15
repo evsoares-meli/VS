@@ -34,6 +34,9 @@ class ProvisionVlans (Script):
 			'Site_id': '$site'
 		}
 	)
+	vlan_status = ChoiceVar(
+        VLANStatusChoices, default=VLANStatusChoices.STATUS_PLANNED,label='Status'
+    )
 	tenant_group = ObjectVar(
 		model=TenantGroup
 	)
@@ -50,7 +53,7 @@ class ProvisionVlans (Script):
 #                  Methods                                                    #
 ################################################################################
 
-	def create_mgmt_vlan (self, site, vlanrange, name, sitetenant, vlangroup, desc):
+	def create_mgmt_vlan (self, site, vlanrange, name, status, sitetenant, vlangroup, desc):
 		vlan_id = vlanrange
 		try:
 			vlan = VLAN.objects.get (site = site, vid = vlan_id)
@@ -67,6 +70,7 @@ class ProvisionVlans (Script):
 			name = f"{name}{V}",
 			vid = vlan_id,
 			group = vlangroup,
+			status = status
 			tenant = sitetenant,
 			description = desc
 		)
@@ -79,6 +83,7 @@ class ProvisionVlans (Script):
 		site = data['site']
 		name = data['vlan_name']
 		sitetenant = data['site_tenant']
+		status=data['vlan_status']
 		vlangroup = data['vlan_group']
 		vlan_range = ['10','20','30','40','50','70','80','100','150','300','310']
 		vdescription = ['Vlan-IS','Vlan-Aruba','Vlan-Cameras','Vlan-Printers','Vlan-Corp','Vlan-HandHeld','Vlan-Operators','Vlan-Mgmt', 'Vlan-Enlace1', 'Vlan-Enlace2']
@@ -87,15 +92,15 @@ class ProvisionVlans (Script):
 		for i in range(0, 10):
 			vlanrange = vlan_range[i]
 			desc = vdescription[i]
-			vlan = self.create_mgmt_vlan (site, vlanrange, name, sitetenant, vlangroup, desc)
+			vlan = self.create_mgmt_vlan (site, vlanrange, name, status, sitetenant, vlangroup, desc)
 		output = [
-			'name,tenant,description'
+			'name,tenant,status,description'
 		]
 		for vlan in VLAN.objects.filter(site=vlan.site):
 
 			attrs = [
 				vlan.name,
-				vlan.scope_id,
+				vlan.status,
 				vlan.description,
 				vlan.tenant.name
 			]
@@ -103,3 +108,4 @@ class ProvisionVlans (Script):
 
 		return '\n'.join(output)
 
+#adiconar escolha de Status
