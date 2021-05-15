@@ -70,7 +70,8 @@ class ProvisionVlans (Script):
 			name = f"{name}{V}",
 			vid = vlan_id,
 #			vgroup = vlangroup,
-			tenant = sitetenant
+			tenant = sitetenant,
+			description = f"Vlan{V}"
 		)
 		vlan.save ()
 		self.log_success ("Created VLAN %s" % vlan)
@@ -89,12 +90,12 @@ class ProvisionVlans (Script):
 		for i in vlan_range:
 			vlan = self.create_mgmt_vlan (site, site_no, i, name, sitetenant, vlangroup)
 		output = [
-			'name,vid,tenant'
+			'name,tenant'
 		]
 		for vlan in VLAN.objects.filter(site=vlan.site):
 			attrs = [
 				vlan.name,
-				vlan.str(vid).name,
+#				vlan.str(vid).name,
 #				vlan.vgroup.name,
 				vlan.tenant.name
 			]
