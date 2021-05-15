@@ -94,7 +94,7 @@ class ProvisionVlans (Script):
 		for vlan in VLAN.objects.filter(site=vlan.site):
 			attrs = [
 				vlan.name,
-				vlan.V.name,
+				vlan.str(vid).name,
 #				vlan.vgroup.name,
 				vlan.tenant.name
 			]
