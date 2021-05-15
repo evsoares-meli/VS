@@ -89,12 +89,12 @@ class ProvisionVlans (Script):
 		for i in vlan_range:
 			vlan = self.create_mgmt_vlan (site, site_no, i, name, sitetenant, vlangroup)
 		output = [
-			'name,'
+			'name,vid,tenant'
 		]
 		for vlan in VLAN.objects.filter(site=vlan.site):
 			attrs = [
 				vlan.name,
-#				vlan.V.name,
+				vlan.vid.name,
 #				vlan.vgroup.name,
 				vlan.tenant.name
 			]
