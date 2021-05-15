@@ -69,7 +69,7 @@ class ProvisionVlans (Script):
 			site = site,
 			name = f"{name}{V}",
 			vid = vlan_id,
-#			vgroup = vlangroup,
+			VLANGroup = vlangroup,
 			tenant = sitetenant,
 			description = desc
 		)
@@ -99,7 +99,7 @@ class ProvisionVlans (Script):
 			attrs = [
 				vlan.name,
 				vlan.description.name,
-#				vlan.vgroup.name,
+				vlan.VLANGroup.name,
 				vlan.tenant.name
 			]
 			output.append(','.join(attrs))
