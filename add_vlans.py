@@ -84,6 +84,7 @@ class ProvisionVlans (Script):
 		sitetenant = data['site_tenant']
 		vlangroup = data['vlan_group']
 		vlan_range = ['10','20','30','40','50','70','80','100','150','300','310']
+
 		# Set up POP Mgmt VLAN
 		for i in vlan_range:
 			vlan = self.create_mgmt_vlan (site, site_no, i, name, sitetenant, vlangroup)
@@ -101,6 +102,8 @@ class ProvisionVlans (Script):
 
 		return '\n'.join(output)
 ################################################################################
-#                                 Falta Inserir GP e Dsc                       #
+#                    
+# 
+#              Falta Inserir GP e Dsc                       #
 ################################################################################
 
