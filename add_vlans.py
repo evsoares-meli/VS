@@ -31,7 +31,7 @@ class ProvisionVlans (Script):
 		description="Vlan name whitout number"
 	)
 	vlan_group = ObjectVar(
-		#required=False,
+		required=False,
 		model= VLANGroup,
 		query_params={
 			'Site_id': '$site'
@@ -69,7 +69,7 @@ class ProvisionVlans (Script):
 			site = site,
 			name = f"{name}{V}",
 			vid = vlan_id,
-			VLANGroup = vlangroup,
+			group = vlangroup,
 			tenant = sitetenant,
 			description = desc
 		)
