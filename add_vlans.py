@@ -92,10 +92,11 @@ class ProvisionVlans (Script):
 			'name,tenant,group,description'
 		]
 		for vlan in VLAN.objects.filter(site=vlan.site):
+
 			attrs = [
 				vlan.name,
 				vlan.description,
-				vlan.group.name,
+				vlan.vid,
 				vlan.tenant.name
 			]
 			output.append(','.join(attrs))
