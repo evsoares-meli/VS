@@ -29,9 +29,9 @@ class ProvisionBackbonePOP (Script):
 	vlan_name = StringVar(
 	   # label="teste",
 	   description="Vlan name whitout number"
-	   )
+	)
 	vlan_group = ObjectVar(
-        #required=False,
+        required=False,
 		model= VLANGroup,
 		query_params={
 			'Site_id': '$site'
