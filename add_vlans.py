@@ -68,7 +68,7 @@ class ProvisionBackbonePOP (Script):
 			site = site,
 			name = f"{name}{V}",
 			vid = vlan_id,
-#			vgroup = vlangroup,
+#	#		vgroup = vlangroup,
 			tenant = sitetenant
 		)
 		vlan.save ()
