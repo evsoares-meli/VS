@@ -70,7 +70,7 @@ class ProvisionVlans (Script):
 			name = f"{name}{V}",
 			vid = vlan_id,
 			group = vlangroup,
-			status = status
+			status = status,
 			tenant = sitetenant,
 			description = desc
 		)
