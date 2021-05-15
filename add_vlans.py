@@ -35,7 +35,9 @@ class ProvisionVlans (Script):
 		}
 	)
 	vlan_status = ChoiceVar(
-        VLANStatusChoices, default=VLANStatusChoices.STATUS_PLANNED,label='Status'
+        VLANStatusChoices, 
+		default=VLANStatusChoices.STATUS_RESERVED,
+		label='Status'
     )
 	tenant_group = ObjectVar(
 		model=TenantGroup
