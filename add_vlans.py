@@ -93,12 +93,12 @@ class ProvisionVlans (Script):
 			desc = vdescription[i]
 			vlan = self.create_mgmt_vlan (site, site_no, vlanrange, name, sitetenant, vlangroup, desc)
 		output = [
-			'name,tenant'
+			'name,tenant,description'
 		]
 		for vlan in VLAN.objects.filter(site=vlan.site):
 			attrs = [
 				vlan.name,
-#				vlan.str(vid).name,
+				vlan.description.name,
 #				vlan.vgroup.name,
 				vlan.tenant.name
 			]
@@ -107,6 +107,6 @@ class ProvisionVlans (Script):
 		return '\n'.join(output)
 ################################################################################
 #             
-#              Falta Inserir GP e Dsc                       #
+#              Falta Inserir GP e                        #
 ################################################################################
 
