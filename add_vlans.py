@@ -96,7 +96,7 @@ class ProvisionVlans (Script):
 			attrs = [
 				vlan.name,
 				vlan.description,
-				vlan.vid,
+				vlan.ID,
 				vlan.tenant.name
 			]
 			output.append(','.join(attrs))
