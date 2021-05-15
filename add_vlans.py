@@ -27,11 +27,11 @@ class ProvisionBackbonePOP (Script):
 	site_no = IntegerVar (description = "Site number (for Mgmt VLAN + prefix)")
 
 	vlan_name = StringVar(
-	   # label="teste",
-	   description="Vlan name whitout number"
+		# label="teste",
+		description="Vlan name whitout number"
 	)
 	vlan_group = ObjectVar(
-        required=False,
+		required=False,
 		model= VLANGroup,
 		query_params={
 			'Site_id': '$site'
