@@ -15,7 +15,7 @@ class ProvisionBackbonePOP (Script):
 		name = "Provision Backbone POP"
 		description = "Provision a new backbone POP"
 		field_order = ['site', 'site_no']
-		commit_default = False
+		#commit_default = False
 
 	# Drop down for sites
 	site = ObjectVar (
@@ -35,8 +35,7 @@ class ProvisionBackbonePOP (Script):
 		model= VLANGroup,
 		query_params={
 			'Site_id': '$site'
-		},
-		default=''
+		}
 	)
 	tenant_group = ObjectVar(
 		model=TenantGroup
@@ -53,8 +52,31 @@ class ProvisionBackbonePOP (Script):
 #                                 Methods                                      #
 ################################################################################
 
-	def run(self, data, commit):
+	def create_mgmt_vlan (self, site, site_no, i, name, sitetenant, vlangroup):
+		vlan_id = i
+		try:
+			vlan = VLAN.objects.get (site = site, vid = vlan_id)
+			self.log_info ("Mgmt vlan %s already present, carrying on." % vlan)
 
+			return vlan
+		except VLAN.DoesNotExist:
+			pass
+
+		i_str = str(i)
+		V = str(i_str.zfill(3))
+		vlan = VLAN (
+			site = site,
+			name = f"{name}{V}",
+			vid = vlan_id,
+			tenant = sitetenant,
+			vgroup = vlangroup
+		)
+		vlan.save ()
+		self.log_success ("Created mgmt VLAN %s" % vlan)
+
+		return vlan
+
+	def run (self, data, commit):
 		site = data['site']
 		site_no = data['site_no']
 		name = data['vlan_name']
@@ -62,27 +84,8 @@ class ProvisionBackbonePOP (Script):
 		vlangroup = data['vlan_group']
 		# Set up POP Mgmt VLAN
 		for i in range(1,10):
-			vlan_id = i
-			try:
-				vlan = VLAN.objects.get (site = site, vid = vlan_id)
-				self.log_info ("Mgmt vlan %s already present, carrying on." % vlan)
+			vlan = self.create_mgmt_vlan (site, site_no, i, name, sitetenant, vlangroup)
 
-			except VLAN.DoesNotExist:
-				pass
-
-			i_str = str(i)
-			V = str(i_str.zfill(3))
-			vlan = VLAN (
-				site = site,
-				name = f"{name}{V}",
-				vid = vlan_id,
-				tenant = sitetenant,
-				#vgroup = vlangroup
-			)
-			vlan.save ()
-			self.log_success ("Created mgmt VLAN %s" % vlan)
-
-		
 ################################################################################
 #                                 Falta Inserir GP e Dsc                       #
 ################################################################################
