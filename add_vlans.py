@@ -67,7 +67,6 @@ class ProvisionBackbonePOP (Script):
 				vlan = VLAN.objects.get (site = site, vid = vlan_id)
 				self.log_info ("Mgmt vlan %s already present, carrying on." % vlan)
 
-				return vlan
 			except VLAN.DoesNotExist:
 				pass
 
