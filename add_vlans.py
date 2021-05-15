@@ -68,7 +68,7 @@ class ProvisionBackbonePOP (Script):
 			site = site,
 			name = f"{name}{V}",
 			vid = vlan_id,
-			vgroup = vlangroup,
+#			vgroup = vlangroup,
 			tenant = sitetenant
 		)
 		vlan.save ()
@@ -86,14 +86,14 @@ class ProvisionBackbonePOP (Script):
 		for i in range(1,10):
 			vlan = self.create_mgmt_vlan (site, site_no, i, name, sitetenant, vlangroup)
 		output = [
-			'site,name,vid,vgroup,tenant'
+			'site,name,vid,tenant'
 		]
 		for vlan in VLAN.objects.filter(site=vlan.site):
 			attrs = [
 				vlan.site,
 				vlan.name,
 				vlan.vid,
-				vlan.vgroup,
+			#	vlan.vgroup,
 				vlan.tenant
 			]
 			output.append(','.join(attrs))
