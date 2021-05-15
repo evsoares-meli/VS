@@ -94,7 +94,7 @@ class ProvisionVlans (Script):
 		for vlan in VLAN.objects.filter(site=vlan.site):
 			attrs = [
 				vlan.name,
-				vlan.vid.name,
+				vlan.V.name,
 #				vlan.vgroup.name,
 				vlan.tenant.name
 			]
@@ -102,8 +102,7 @@ class ProvisionVlans (Script):
 
 		return '\n'.join(output)
 ################################################################################
-#                    
-# 
+#             
 #              Falta Inserir GP e Dsc                       #
 ################################################################################
 
