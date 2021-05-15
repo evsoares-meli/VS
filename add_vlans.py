@@ -48,28 +48,13 @@ class ProvisionVlans (Script):
 			'group_id': '$tenant_group'
 		}
 	)
-	Choices = (
-		('Vlan-IS', '10'),
-		('Vlan-Aruba', '20'),
-		('Vlan-Cameras', '30'),
-		('Vlan-Printers', '40'),
-		('Vlan-Corp', '50'),
-		('Vlan-HandHeld', '70'),
-		('Vlan-Operators', '80'),
-		('Vlan-Mgmt', '100'),
-		('Vlan-Enlace1', '300'),
-		('Vlan-Enlace2', '310')
-	)
-	vdescription = ChoiceVar(
-		choices=Choices
-	)
 
 ################################################################################             
 #                  Methods                                                    #
 ################################################################################
 
-	def create_mgmt_vlan (self, site, site_no, i, name, sitetenant, vlangroup, description):
-		vlan_id = i
+	def create_mgmt_vlan (self, site, site_no, vlanrange, name, sitetenant, vlangroup, desc):
+		vlan_id = vlanrange
 		try:
 			vlan = VLAN.objects.get (site = site, vid = vlan_id)
 			self.log_info ("Vlan %s already present, carrying on." % vlan)
@@ -78,7 +63,7 @@ class ProvisionVlans (Script):
 		except VLAN.DoesNotExist:
 			pass
 
-		i_str = str(i)
+		i_str = str(vlanrange)
 		V = str(i_str.zfill(3))
 		vlan = VLAN (
 			site = site,
@@ -86,7 +71,7 @@ class ProvisionVlans (Script):
 			vid = vlan_id,
 #			vgroup = vlangroup,
 			tenant = sitetenant,
-			description = description.v
+			description = desc
 		)
 		vlan.save ()
 		self.log_success ("Created VLAN %s" % vlan)
@@ -100,11 +85,13 @@ class ProvisionVlans (Script):
 		sitetenant = data['site_tenant']
 		vlangroup = data['vlan_group']
 		vlan_range = ['10','20','30','40','50','70','80','100','150','300','310']
-		description = data['vdescription']
+		vdescription = ['Vlan-IS','Vlan-Aruba','Vlan-Cameras','Vlan-Printers','Vlan-Corp','Vlan-HandHeld','Vlan-Operators','Vlan-Mgmt', 'Vlan-Enlace1', 'Vlan-Enlace2']
 
 		# Set up POP Mgmt VLAN
-		for i in vlan_range:
-			vlan = self.create_mgmt_vlan (site, site_no, i, name, sitetenant, vlangroup, description)
+		for i in range(0, 10):
+			vlanrange = vlan_range[i]
+			desc = vdescription[i]
+			vlan = self.create_mgmt_vlan (site, site_no, vlanrange, name, sitetenant, vlangroup, desc)
 		output = [
 			'name,tenant'
 		]
