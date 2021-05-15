@@ -48,12 +48,27 @@ class ProvisionVlans (Script):
 			'group_id': '$tenant_group'
 		}
 	)
-	
+	Choices = (
+		('Vlan-IS', '10'),
+		('Vlan-Aruba', '20'),
+		('Vlan-Cameras', '30'),
+		('Vlan-Printers', '40'),
+		('Vlan-Corp', '50'),
+		('Vlan-HandHeld', '70'),
+		('Vlan-Operators', '80'),
+		('Vlan-Mgmt', '100'),
+		('Vlan-Enlace1', '300'),
+		('Vlan-Enlace2', '310')
+	)
+	vdescription = ChoiceVar(
+		choices=Choices
+	)
+
 ################################################################################             
 #                  Methods                                                    #
 ################################################################################
 
-	def create_mgmt_vlan (self, site, site_no, i, name, sitetenant, vlangroup):
+	def create_mgmt_vlan (self, site, site_no, i, name, sitetenant, vlangroup, description):
 		vlan_id = i
 		try:
 			vlan = VLAN.objects.get (site = site, vid = vlan_id)
@@ -71,7 +86,7 @@ class ProvisionVlans (Script):
 			vid = vlan_id,
 #			vgroup = vlangroup,
 			tenant = sitetenant,
-			description = f"Vlan{V}"
+			description = description.v
 		)
 		vlan.save ()
 		self.log_success ("Created VLAN %s" % vlan)
@@ -85,10 +100,11 @@ class ProvisionVlans (Script):
 		sitetenant = data['site_tenant']
 		vlangroup = data['vlan_group']
 		vlan_range = ['10','20','30','40','50','70','80','100','150','300','310']
+		description = data['vdescription']
 
 		# Set up POP Mgmt VLAN
 		for i in vlan_range:
-			vlan = self.create_mgmt_vlan (site, site_no, i, name, sitetenant, vlangroup)
+			vlan = self.create_mgmt_vlan (site, site_no, i, name, sitetenant, vlangroup, description)
 		output = [
 			'name,tenant'
 		]
