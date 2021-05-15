@@ -95,7 +95,7 @@ class ProvisionVlans (Script):
 
 			attrs = [
 				vlan.name,
-				vlan.scope_id
+				vlan.scope_id,
 				vlan.description,
 				vlan.tenant.name
 			]
