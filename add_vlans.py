@@ -23,9 +23,6 @@ class ProvisionVlans (Script):
 		queryset = Site.objects.all ()
 	)
 
-	# Site No.
-	site_no = IntegerVar (description = "Site number (for Mgmt VLAN + prefix)")
-
 	vlan_name = StringVar(
 		# label="teste",
 		description="Vlan name whitout number"
@@ -93,20 +90,16 @@ class ProvisionVlans (Script):
 			desc = vdescription[i]
 			vlan = self.create_mgmt_vlan (site, site_no, vlanrange, name, sitetenant, vlangroup, desc)
 		output = [
-			'name,tenant,description'
+			'name,tenant,group,description'
 		]
 		for vlan in VLAN.objects.filter(site=vlan.site):
 			attrs = [
 				vlan.name,
 				vlan.description.name,
-				vlan.VLANGroup.name,
+				vlan.group.name,
 				vlan.tenant.name
 			]
 			output.append(','.join(attrs))
 
 		return '\n'.join(output)
-################################################################################
-#             
-#              Falta Inserir GP e                        #
-################################################################################
 
