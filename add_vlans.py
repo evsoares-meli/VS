@@ -50,7 +50,7 @@ class ProvisionVlans (Script):
 #                  Methods                                                    #
 ################################################################################
 
-	def create_mgmt_vlan (self, site, site_no, vlanrange, name, sitetenant, vlangroup, desc):
+	def create_mgmt_vlan (self, site, vlanrange, name, sitetenant, vlangroup, desc):
 		vlan_id = vlanrange
 		try:
 			vlan = VLAN.objects.get (site = site, vid = vlan_id)
@@ -77,7 +77,6 @@ class ProvisionVlans (Script):
 
 	def run (self, data, commit):
 		site = data['site']
-		site_no = data['site_no']
 		name = data['vlan_name']
 		sitetenant = data['site_tenant']
 		vlangroup = data['vlan_group']
@@ -88,7 +87,7 @@ class ProvisionVlans (Script):
 		for i in range(0, 10):
 			vlanrange = vlan_range[i]
 			desc = vdescription[i]
-			vlan = self.create_mgmt_vlan (site, site_no, vlanrange, name, sitetenant, vlangroup, desc)
+			vlan = self.create_mgmt_vlan (site, vlanrange, name, sitetenant, vlangroup, desc)
 		output = [
 			'name,tenant,group,description'
 		]
