@@ -64,7 +64,8 @@ class ProvisionPrefixes (Script):
 			prefix = prefix_cidr,
 			#vlan = vlan,
             status = status,
-			role = Role.objects.get (name = 'Production')
+			role = Role.objects.get (name = 'Production'),
+            description = 'Prefixo' + site
 		)
 
 		prefix.save ()
