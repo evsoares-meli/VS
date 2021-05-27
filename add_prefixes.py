@@ -49,7 +49,7 @@ class ProvisionPrefixes (Script):
 #				  Methods													#
 ################################################################################
 
- 	def create_prefix (self, prefix_name, site, vlan, tenant, status):
+	def create_prefix (self, prefix_name, site, vlan, tenant, status):
 		prefix_cidr = prefix_name % site
 		try:
 			prefix = Prefix.objects.get (prefix = prefix_cidr)
