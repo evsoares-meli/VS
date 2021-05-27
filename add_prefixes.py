@@ -62,8 +62,8 @@ class ProvisionPrefixes (Script):
 		prefix = Prefix (
 			site = site,
 			prefix = prefix_cidr,
-			#vlan = vlan,
             status = status,
+			tenant = tenant,
 			role = Role.objects.get (name = 'Production'),
             description = "Prefixo" + str(site)
 		)
