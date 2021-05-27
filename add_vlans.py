@@ -92,7 +92,7 @@ class ProvisionVlans (Script):
 		vdescription = ['Vlan-IS','Vlan-Aruba','Vlan-Cameras','Vlan-Printers','Vlan-Corp','Vlan-HandHeld','Vlan-Operators','Vlan-Mgmt','Vlan-AccessControl', 'Vlan-Enlace1', 'Vlan-Enlace2']
 
 		# Set up POP Mgmt VLAN
-		for i in range(0, 10):
+		for i in range(0, 11):
 			vlanrange = vlan_range[i]
 			desc = vdescription[i]
 			vlan = self.create_mgmt_vlan (site, vlanrange, name, status, sitetenant, vlangroup, desc)
