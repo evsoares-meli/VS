@@ -60,9 +60,11 @@ class NewBranchScript(Script):
 
 
         for i in range(1, data['device_count'] + 1):
+            i_str = str(i)
+            I = i_str.zfill(3)
             switch = Device(
                 device_type=data['device_model'],
-                name=f"{data['device_name']}{i}",
+                name=f"{data['device_name']}{I}",
                 site=data['site_name'],
                 tenant=data['site_tenant'],
                 status=data['device_status'],

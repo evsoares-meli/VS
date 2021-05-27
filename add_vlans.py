@@ -109,5 +109,4 @@ class ProvisionVlans (Script):
 			output.append(','.join(attrs))
 
 		return '\n'.join(output)
-
-#adiconar escolha de Status
+#adicionar escolha de role
