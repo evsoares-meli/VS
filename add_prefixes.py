@@ -50,7 +50,7 @@ class ProvisionPrefixes (Script):
 ################################################################################
 
 	def create_prefix (self, prefix_name, site, vlan, tenant, status):
-		prefix_cidr = prefix_name % site
+		prefix_cidr = prefix_name
 		try:
 			prefix = Prefix.objects.get (prefix = prefix_cidr)
 			self.log_info ("Mgmt prefix %s already present, carrying on." % prefix)
