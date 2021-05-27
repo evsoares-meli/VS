@@ -59,15 +59,13 @@ class ProvisionPrefixes (Script):
 		except Prefix.DoesNotExist:
 			pass
 
-		desc1 = "Prefixo "
-		desc2 = str(site)
 		prefix = Prefix (
 			site = site,
 			prefix = prefix_cidr,
 			#vlan = vlan,
             status = status,
 			role = Role.objects.get (name = 'Production'),
-            description = desc1 + desc2
+            description = "Prefixo" + str(site)
 		)
 
 		prefix.save ()
