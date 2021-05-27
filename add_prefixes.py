@@ -38,19 +38,7 @@ class ProvisionPrefixes (Script):
 		default=PrefixStatusChoices.STATUS_RESERVED,
 		label='Status'
 	)
-	role = models.ForeignKey(
-		to='ipam.Role',
-		on_delete=models.SET_NULL,
-		related_name='prefixes',
-		blank=True,
-		null=True,
-		help_text='The primary function of this prefix'
-	)
-	is_pool = models.BooleanField(
-		verbose_name='Is a pool',
-		default=False,
-		help_text='All IP addresses within this prefix are considered usable'
-	)
+
 
 
 ################################################################################             
