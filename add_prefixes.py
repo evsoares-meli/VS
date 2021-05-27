@@ -13,9 +13,13 @@ class ProvisionPrefixes (Script):
 	class Meta:
 		name = "Provision Prefixes"
 		description = "Provision multiples Prefixes to a Site"
-		field_order = ['site', 'site_no']
+		field_order = ['site']
 		#commit_default = False
 
+	prefix_name = StringVar(
+		label="Prefixo",
+		description="Vlan name whitout number"
+	)
 	# Drop down for sites
 	site = ObjectVar (
 		description = "Site to be deployed",
@@ -41,63 +45,50 @@ class ProvisionPrefixes (Script):
 
 
 
-################################################################################             
-#                  Methods                                                    #
+################################################################################			 
+#				  Methods													#
 ################################################################################
 
-	def create_preffix (self, site, vlanrange, name, status, sitetenant, vlangroup, desc):
-		vlan_id = vlanrange
+ 	def create_prefix (self, prefix_name, site, vlan, tenant, status):
+		prefix_cidr = prefix_name % site
 		try:
-			vlan = VLAN.objects.get (site = site, vid = vlan_id)
-			self.log_info ("Vlan %s already present, carrying on." % vlan)
+			prefix = Prefix.objects.get (prefix = prefix_cidr)
+			self.log_info ("Mgmt prefix %s already present, carrying on." % prefix)
 
-			return vlan
-		except VLAN.DoesNotExist:
+			return prefix
+		except Prefix.DoesNotExist:
 			pass
 
-		i_str = str(vlanrange)
-		V = str(i_str.zfill(3))
-		vlan = VLAN (
+		prefix = Prefix (
 			site = site,
-			name = f"{name}{V}",
-			vid = vlan_id,
-			group = vlangroup,
-			status = status,
-			tenant = sitetenant,
-			role = Role.objects.get (name = 'Production'),
-			description = desc
+			prefix = prefix_cidr,
+			vlan = vlan,
+			role = Role.objects.get (name = 'Production')
 		)
-		vlan.save ()
-		self.log_success ("Created VLAN %s" % vlan)
 
-		return vlan
+		prefix.save ()
+		self.log_success ("Created mgmt prefix %s" % prefix)
 
+		return prefix
+	
+	
 	def run (self, data, commit):
+		prefix_name = data['prefix_name']
 		site = data['site']
-		name = data['vlan_name']
-		sitetenant = data['site_tenant']
-		status=data['vlan_status']
-		vlangroup = data['vlan_group']
-		vlan_range = ['10','20','30','40','50','70','80','100','150','300','310']
-		vdescription = ['Vlan-IS','Vlan-Aruba','Vlan-Cameras','Vlan-Printers','Vlan-Corp','Vlan-HandHeld','Vlan-Operators','Vlan-Mgmt','Vlan-AccessControl', 'Vlan-Enlace1', 'Vlan-Enlace2']
+		tenant = data['site_tenant']
+		status = data['status']
+		vlan = ''
+
+		# site = data['site']
+		# name = data['vlan_name']
+		# sitetenant = data['site_tenant']
+		# status=data['vlan_status']
+		# vlangroup = data['vlan_group']
+		# vlan_range = ['10','20','30','40','50','70','80','100','150','300','310']
+		# vdescription = ['Vlan-IS','Vlan-Aruba','Vlan-Cameras','Vlan-Printers','Vlan-Corp','Vlan-HandHeld','Vlan-Operators','Vlan-Mgmt','Vlan-AccessControl', 'Vlan-Enlace1', 'Vlan-Enlace2']
 
 		# Set up POP Mgmt VLAN
-		for i in range(0, 11):
-			vlanrange = vlan_range[i]
-			desc = vdescription[i]
-			vlan = self.create_preffix (site, vlanrange, name, status, sitetenant, vlangroup, desc)
-		output = [
-			'name,tenant,status,description'
-		]
-		for vlan in VLAN.objects.filter(site=vlan.site):
-
-			attrs = [
-				vlan.name,
-				vlan.status,
-				vlan.description,
-				vlan.tenant.name
-			]
-			output.append(','.join(attrs))
-
-		return '\n'.join(output)
-#adicionar escolha de role
+		#for i in range(0, 11):
+		#	vlanrange = vlan_range[i]
+		#	desc = vdescription[i]
+		prefix = self.create_preffix (prefix_name, site, vlan, tenant, status)
