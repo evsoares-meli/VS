@@ -91,4 +91,4 @@ class ProvisionPrefixes (Script):
 		#for i in range(0, 11):
 		#	vlanrange = vlan_range[i]
 		#	desc = vdescription[i]
-		prefix = self.create_preffix (prefix_name, site, vlan, tenant, status)
+		prefix = self.create_prefix (prefix_name, site, vlan, tenant, status)
