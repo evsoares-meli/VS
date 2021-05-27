@@ -60,7 +60,7 @@ class ProvisionPrefixes (Script):
 			pass
 
 		desc1 = "Prefixo "
-		desc2 = site
+		desc2 = str(site)
 		prefix = Prefix (
 			site = site,
 			prefix = prefix_cidr,
