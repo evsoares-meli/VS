@@ -65,7 +65,7 @@ class ProvisionPrefixes (Script):
 			#vlan = vlan,
             status = status,
 			role = Role.objects.get (name = 'Production'),
-            description = ("Prefixo" + site)
+            description = str("Prefixo" + site)
 		)
 
 		prefix.save ()
