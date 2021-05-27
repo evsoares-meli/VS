@@ -62,17 +62,28 @@ class ProvisionPrefixes (Script):
 		prefix = Prefix (
 			site = site,
 			prefix = prefix_cidr,
-            status = status,
+			status = status,
 			tenant = tenant,
 			role = Role.objects.get (name = 'Production'),
-            description = "Prefixo" + str(site)
+			description = "Prefixo" + str(site)
 		)
-
+		
+		prefix.save ()
+		self.log_success ("Created mgmt prefix %s" % prefix)
+		
+		prefix = Prefix (
+			site = site,
+			prefix = '10.198.196.0/28',
+			status = status,
+			tenant = tenant,
+			role = Role.objects.get (name = 'Production'),
+			description = "Prefixo" + str(site)
+		)
+		
 		prefix.save ()
 		self.log_success ("Created mgmt prefix %s" % prefix)
 
-		return prefix
-	
+		return prefix	
 	
 	def run (self, data, commit):
 		prefix_name = data['prefix_name']
