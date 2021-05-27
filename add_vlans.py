@@ -39,10 +39,6 @@ class ProvisionVlans (Script):
 		default=VLANStatusChoices.STATUS_RESERVED,
 		label='Status'
     )
-	role_status = ChoiceVar(
-		model=RoleChoices,
-		label='Role'
-	)
 	tenant_group = ObjectVar(
 		model=TenantGroup
 	)
@@ -78,6 +74,7 @@ class ProvisionVlans (Script):
 			group = vlangroup,
 			status = status,
 			tenant = sitetenant,
+			role = Role.objects.get (name = 'Production'),
 			description = desc
 		)
 		vlan.save ()
