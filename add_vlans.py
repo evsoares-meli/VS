@@ -40,7 +40,7 @@ class ProvisionVlans (Script):
 		label='Status'
     )
 	role_status = ChoiceVar(
-		model=Role,
+		model=RoleChoices,
 		label='Role'
 	)
 	tenant_group = ObjectVar(
