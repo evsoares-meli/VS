@@ -92,16 +92,4 @@ class ProvisionPrefixes (Script):
 		status = data['status']
 		vlan = ''
 
-		# site = data['site']
-		# name = data['vlan_name']
-		# sitetenant = data['site_tenant']
-		# status=data['vlan_status']
-		# vlangroup = data['vlan_group']
-		# vlan_range = ['10','20','30','40','50','70','80','100','150','300','310']
-		# vdescription = ['Vlan-IS','Vlan-Aruba','Vlan-Cameras','Vlan-Printers','Vlan-Corp','Vlan-HandHeld','Vlan-Operators','Vlan-Mgmt','Vlan-AccessControl', 'Vlan-Enlace1', 'Vlan-Enlace2']
-
-		# Set up POP Mgmt VLAN
-		#for i in range(0, 11):
-		#	vlanrange = vlan_range[i]
-		#	desc = vdescription[i]
 		prefix = self.create_prefix (prefix_name, site, vlan, tenant, status)

@@ -1,0 +1,2 @@
+hostname,host_addr,wan_ip,pckt_send,pckt_received,pckt_loss,min_latency,avg_latency,max_latency
+10.29.104.10,BRSCARFWP001-1,45.70.85.254,50 packets transmitted, 50 packets received, 0% packet loss,12.2,13.5,19.2
