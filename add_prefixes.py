@@ -1,4 +1,4 @@
-import ipsplit
+import .ipsplit
 from django.utils.text import slugify
 from dcim.choices import *
 from dcim.models import Cable, Device, DeviceRole, DeviceType, Platform, Rack, RackRole, Site
