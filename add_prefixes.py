@@ -1,4 +1,4 @@
-from ipsplit import *
+from . import ipsplit
 from django.utils.text import slugify
 from dcim.choices import *
 from dcim.models import Cable, Device, DeviceRole, DeviceType, Platform, Rack, RackRole, Site
@@ -92,6 +92,5 @@ class ProvisionPrefixes (Script):
 		tenant = data['site_tenant']
 		status = data['status']
 		vlan = ''
-		childpref = childprefix(preffix_name, desc)
-
+		childprefix = childprefix(preffix_name, desc)
 		prefix = self.create_prefix (prefix_name, site, vlan, tenant, status)
