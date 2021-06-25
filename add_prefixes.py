@@ -1,4 +1,4 @@
-from dcim.ipsplit import childprefix
+from dcim.ipsplit import *
 from math import floor
 from django.utils.text import slugify
 from dcim.choices import *
@@ -96,5 +96,5 @@ class ProvisionPrefixes (Script):
 		status = data['status']
 		vlan = ''
 		c_preffix = childprefix(prefix_name, site)
-		self.log_info (c_preffix)
+		self.log_info (c_preffix, prefix_name, site)
 		prefix = self.create_prefix (prefix_name, site, vlan, tenant, status, c_preffix)
