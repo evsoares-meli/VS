@@ -91,7 +91,7 @@ class ProvisionPrefixes (Script):
 	def run (self, data, commit):
 		prefix_name = data['prefix_name']
 		site = data['site']
-		desc = ('Prefix ' + site)
+		desc = ('Prefix ' + data['site'])
 		tenant = data['site_tenant']
 		status = data['status']
 		vlan = ''
@@ -99,3 +99,8 @@ class ProvisionPrefixes (Script):
 		prefix = self.create_prefix (prefix_name, site, vlan, tenant, status, c_preffix)
 
 
+######
+######
+######
+######
+#
