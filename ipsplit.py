@@ -46,7 +46,7 @@ def childprefix (a, gen_ips_addr):
 		else:
 			print ('mascara ainda nao programada ' + a)
 	return gen_ips_addr
-
+	
 gen_ips_addr = []
 desc = ['VLAN_MGMT','VLAN_IS','VLAN_CLOCK','VLAN_WIFI','VLAN_PRINTERS','VLAN_HANDHELD','VLAN_OPERATOR','VLAN_CAMERAS','VLAN_CORP']
 

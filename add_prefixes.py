@@ -62,24 +62,26 @@ class ProvisionPrefixes (Script):
 
 		prefix = Prefix (
 			site = site,
-			prefix = prefix_cidr,
+			prefix = c_preffix[0][0],
 			status = status,
 			tenant = tenant,
 			role = Role.objects.get (name = 'Production'),
-			description = "Prefixo" + str(site)
+			description = c_preffix[0][1]
 		)
 		
 		prefix.save ()
 		self.log_success ("Created mgmt prefix %s" % prefix)
 		
-		prefix = Prefix (
-			site = site,
-			prefix = '10.198.196.0/28',
-			status = status,
-			tenant = tenant,
-			role = Role.objects.get (name = 'Production'),
-			description = "Prefixo" + str(site)
-		)
+		c = len(c_preffix)
+		for d in range(1, c):
+			prefix = Prefix (
+				site = site,
+				prefix = c_preffix[d][0],
+				status = status,
+				tenant = tenant,
+				role = Role.objects.get (name = 'Production'),
+				description = c_preffix[d][1]
+			)
 		
 		prefix.save ()
 		self.log_success ("Created mgmt prefix %s" % prefix)
@@ -95,3 +97,5 @@ class ProvisionPrefixes (Script):
 		vlan = ''
 		c_preffix = childprefix(prefix_name, desc)
 		prefix = self.create_prefix (prefix_name, site, vlan, tenant, status, c_preffix)
+
+
