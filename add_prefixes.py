@@ -111,11 +111,11 @@ class ProvisionPrefixes (Script):
 		for d in range(0, c):
 			prefix = Prefix (
 				site = site,
-				prefix = c_preffix[c][0],
+				prefix = c_preffix[d][0],
 				status = status,
 				tenant = tenant,
 				role = Role.objects.get (name = 'Production'),
-				description = c_preffix[c][1]
+				description = c_preffix[d][1]
 			)
 		
 		prefix.save ()
