@@ -29,7 +29,7 @@ def validaIp(addr, ipaddr):
 		return addr
 
 def childprefix (a, gen_ips_addr):
-	gen_ips_addr = [a, gen_ips_addr]
+	gen_ips_addr = [[a, gen_ips_addr]]
 	desc = ['VLAN_MGMT','VLAN_IS','VLAN_CLOCK','VLAN_WIFI','VLAN_PRINTERS','VLAN_HANDHELD','VLAN_OPERATOR','VLAN_CAMERAS','VLAN_CORP']
 	vlan = [100,10,150,20,40,70,80,30,50]
 
