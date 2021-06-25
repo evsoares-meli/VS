@@ -1,4 +1,4 @@
-from django.ipsplit import childprefix
+from dcim.ipsplit import childprefix
 from math import floor
 from django.utils.text import slugify
 from dcim.choices import *
