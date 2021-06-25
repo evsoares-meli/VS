@@ -102,7 +102,7 @@ class ProvisionPrefixes (Script):
 		try:
 			prefix = Prefix.objects.get (prefix = prefix_cidr)
 			self.log_info ("Mgmt prefix %s already present, carrying on." % prefix)
-			prefix = VLAN.objects.get (site = site.name, vid = vlan = c_preffix[d][2])
+			prefix = VLAN.objects.get (site = site.name, vid  = c_preffix[d][2])
 			self.log_info ("Mgmt prefix %s already present, carrying on." % prefix)
 
 			return prefix
