@@ -50,7 +50,7 @@ def childprefix (a, gen_ips_addr):
 			oct3 = validaIp(oct3, a)
 			ch3 = [oct3,oct3,oct3,oct3,oct3,oct3,oct3+1,oct3+2,oct3+2]
 			ch4 = [0,16,24,32,64,128,0,0,128]
-			nmask = [28,28,28,27,26,25,24,25,25]
+			nmask = [28,29,29,27,26,25,24,25,25]
 			count_m = len(nmask)
 			for x in range(0, count_m):
 				#printIps(nmask[x], oct1, oct2, ch3[x], ch4[x], desc[x])
@@ -141,7 +141,7 @@ class ProvisionPrefixes (Script):
 
 
 
-#  X.Y.Z.0   / 28   -   mgmt 	#  X.Y.Z.16  / 28   -   is			#  X.Y.Z.24  / 28   -   REP 
+#  X.Y.Z.0   / 28   -   mgmt 	#  X.Y.Z.16  / 29   -   is			#  X.Y.Z.24  / 29   -   REP 
 #  X.Y.Z.32  / 27   -   Aruba 	#  X.Y.Z.64  / 26   -   Printers 	#  X.Y.Z.128 / 25   -   HH
 #  X.Y.Z+1.0 / 24   -   OP 		#  X.Y.Z+2.0 /	25   -   Cam  		#  X.Y.Z+2.128 / 25   -   corp
-
+# CTRL-ACESSO?
