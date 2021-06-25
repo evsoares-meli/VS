@@ -108,7 +108,7 @@ class ProvisionPrefixes (Script):
 			pass
 		
 		c = len(c_preffix)
-		for d in range(0, c):
+		for d in range(1, c):
 			prefix = Prefix (
 				site = site,
 				prefix = c_preffix[d][0],
