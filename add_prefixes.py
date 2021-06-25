@@ -109,7 +109,7 @@ class ProvisionPrefixes (Script):
 		
 		c = len(c_preffix)
 		for d in range(1, c):
-			vlan_id = VLAN.objects.get (site = site, vid = c_preffix[d][2])
+			vlan_id = VLAN.objects.get (site = 'test', vid = c_preffix[d][2])
 			self.log_info (vlan_id)
 			prefix = Prefix (
 				site = site,
