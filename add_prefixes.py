@@ -102,6 +102,8 @@ class ProvisionPrefixes (Script):
 		try:
 			prefix = Prefix.objects.get (prefix = prefix_cidr)
 			self.log_info ("Mgmt prefix %s already present, carrying on." % prefix)
+			prefix = VLAN.objects.get (site = site.name, vid = vlan = c_preffix[d][2])
+			self.log_info ("Mgmt prefix %s already present, carrying on." % prefix)
 
 			return prefix
 		except Prefix.DoesNotExist:
@@ -109,12 +111,10 @@ class ProvisionPrefixes (Script):
 		
 		c = len(c_preffix)
 		for d in range(1, c):
-			vlan_id = VLAN.objects.get (site = 'test', vid = c_preffix[d][2])
-			self.log_info (vlan_id)
 			prefix = Prefix (
 				site = site,
 				prefix = c_preffix[d][0],
-				vlan = c_preffix[d][2],
+				#vlan = c_preffix[d][2],
 				status = status,
 				tenant = tenant,
 				role = Role.objects.get (name = 'Production'),
@@ -134,6 +134,7 @@ class ProvisionPrefixes (Script):
 		status = data['status']
 		vlan = ''
 		c_preffix = childprefix(prefix_name, desc)
+		self.log_info (c_preffix)
 		prefix = self.create_prefix (prefix_name, site_name, vlan, tenant, status, c_preffix)
 
 
