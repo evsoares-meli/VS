@@ -29,7 +29,7 @@ def validaIp(addr, ipaddr):
 		return addr
 
 def childprefix (a, gen_ips_addr):
-	gen_ips_addr = []
+	gen_ips_addr = [a, gen_ips_addr]
 	desc = ['VLAN_MGMT','VLAN_IS','VLAN_CLOCK','VLAN_WIFI','VLAN_PRINTERS','VLAN_HANDHELD','VLAN_OPERATOR','VLAN_CAMERAS','VLAN_CORP']
 	vlan = [100,10,150,20,40,70,80,30,50]
 
@@ -58,15 +58,6 @@ def childprefix (a, gen_ips_addr):
 		else:
 			print ('mascara ainda nao programada ' + a)
 	return gen_ips_addr
-#  X.Y.Z.0   / 28   -   mgmt 	#  X.Y.Z.16  / 28   -   is			#  X.Y.Z.24  / 28   -   REP 
-#  X.Y.Z.32  / 27   -   Aruba 	#  X.Y.Z.64  / 26   -   Printers 	#  X.Y.Z.128 / 25   -   HH
-#  X.Y.Z+1.0 / 24   -   OP 		#  X.Y.Z+2.0 /	25   -   Cam  		#  X.Y.Z+2.128 / 25   -   corp
-
-
-
-
-
-
 
 class ProvisionPrefixes (Script):
 	class Meta:
@@ -101,8 +92,6 @@ class ProvisionPrefixes (Script):
 		default=PrefixStatusChoices.STATUS_RESERVED,
 		label='Status'
 	)
-
-
 
 ################################################################################			 
 #				  Methods													#
@@ -155,3 +144,15 @@ class ProvisionPrefixes (Script):
 		c_preffix = childprefix(prefix_name, site_name.name)
 		self.log_info (c_preffix)
 		prefix = self.create_prefix (prefix_name, site_name, vlan, tenant, status, c_preffix)
+
+
+
+
+
+
+
+
+#  X.Y.Z.0   / 28   -   mgmt 	#  X.Y.Z.16  / 28   -   is			#  X.Y.Z.24  / 28   -   REP 
+#  X.Y.Z.32  / 27   -   Aruba 	#  X.Y.Z.64  / 26   -   Printers 	#  X.Y.Z.128 / 25   -   HH
+#  X.Y.Z+1.0 / 24   -   OP 		#  X.Y.Z+2.0 /	25   -   Cam  		#  X.Y.Z+2.128 / 25   -   corp
+
