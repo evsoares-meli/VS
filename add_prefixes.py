@@ -93,5 +93,5 @@ class ProvisionPrefixes (Script):
 		status = data['status']
 		vlan = ''
 
-		self.log_info (site)
+		self.log_info (site.name)
 		prefix = self.create_prefix (prefix_name, site, vlan, tenant, status)
