@@ -100,9 +100,9 @@ class ProvisionPrefixes (Script):
 	def create_prefix (self, prefix_name, site, vlan, tenant, status, c_preffix):
 		prefix_cidr = prefix_name
 		try:
-			prefix = Prefix.objects.get (prefix = prefix_cidr)
-			self.log_info ("Mgmt prefix %s already present, carrying on." % prefix)
-			prefix = VLAN.objects.get (site = site.name, vid  = c_preffix[d][2])
+			#prefix = Prefix.objects.get (prefix = prefix_cidr)
+			#self.log_info ("Mgmt prefix %s already present, carrying on." % prefix)
+			prefix = VLAN.objects.get (site = site.name, vid  = c_preffix[1][2])
 			self.log_info ("Mgmt prefix %s already present, carrying on." % prefix)
 
 			return prefix
