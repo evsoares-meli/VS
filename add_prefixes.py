@@ -112,7 +112,7 @@ class ProvisionPrefixes (Script):
 			prefix = Prefix (
 				site = site,
 				prefix = c_preffix[d][0],
-				vlan = c_preffix[d][0][0],
+				vlan = c_preffix[d][2],
 				status = status,
 				tenant = tenant,
 				role = Role.objects.get (name = 'Production'),
