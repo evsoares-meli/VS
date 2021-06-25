@@ -54,7 +54,7 @@ def childprefix (a, gen_ips_addr):
 			count_m = len(nmask)
 			for x in range(0, count_m):
 				#printIps(nmask[x], oct1, oct2, ch3[x], ch4[x], desc[x])
-				gen_ips_addr = gen_ips_addr + [[('{}.{}.{}.{}/{}'.format(oct1,oct2,ch3[x],ch4[x],nmask[x])),desc[x]]]
+				gen_ips_addr = gen_ips_addr + [[('{}.{}.{}.{}/{}'.format(oct1,oct2,ch3[x],ch4[x],nmask[x])),desc[x],vlan[x]]]
 		else:
 			print ('mascara ainda nao programada ' + a)
 	return gen_ips_addr
@@ -106,28 +106,16 @@ class ProvisionPrefixes (Script):
 			return prefix
 		except Prefix.DoesNotExist:
 			pass
-
-		prefix = Prefix (
-			site = site,
-			prefix = c_preffix[0][0],
-			status = status,
-			tenant = tenant,
-			role = Role.objects.get (name = 'Production'),
-			description = c_preffix[0][1]
-		)
-		
-		prefix.save ()
-		self.log_success ("Created mgmt prefix %s" % prefix)
 		
 		c = len(c_preffix)
-		for d in range(1, c):
+		for d in range(0, c):
 			prefix = Prefix (
 				site = site,
-				prefix = c_preffix[d][0],
+				prefix = c_preffix[c][0],
 				status = status,
 				tenant = tenant,
 				role = Role.objects.get (name = 'Production'),
-				description = c_preffix[d][1]
+				description = c_preffix[c][1]
 			)
 		
 		prefix.save ()
@@ -138,10 +126,11 @@ class ProvisionPrefixes (Script):
 	def run (self, data, commit):
 		prefix_name = data['prefix_name']
 		site_name = data['site']
+		desc = 'Prefix ' + site_name.name
 		tenant = data['site_tenant']
 		status = data['status']
 		vlan = ''
-		c_preffix = childprefix(prefix_name, site_name.name)
+		c_preffix = childprefix(prefix_name, desc)
 		self.log_info (c_preffix)
 		prefix = self.create_prefix (prefix_name, site_name, vlan, tenant, status, c_preffix)
 
