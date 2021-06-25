@@ -20,6 +20,10 @@ def validaIp(addr, ipaddr):
 		return addr
 
 def childprefix (a, gen_ips_addr):
+	gen_ips_addr = []
+	desc = ['VLAN_MGMT','VLAN_IS','VLAN_CLOCK','VLAN_WIFI','VLAN_PRINTERS','VLAN_HANDHELD','VLAN_OPERATOR','VLAN_CAMERAS','VLAN_CORP']
+	vlan = [100,10,150,20,40,70,80,30,50]
+
 	if '/' in a:
 		ips = a.split('/')
 		ip = ips[0]
@@ -38,7 +42,6 @@ def childprefix (a, gen_ips_addr):
 			ch3 = [oct3,oct3,oct3,oct3,oct3,oct3,oct3+1,oct3+2,oct3+2]
 			ch4 = [0,16,24,32,64,128,0,0,128]
 			nmask = [28,28,28,27,26,25,24,25,25]
-			vlan = [100,10,150,20,40,70,80,30,50]
 			count_m = len(nmask)
 			for x in range(0, count_m):
 				#printIps(nmask[x], oct1, oct2, ch3[x], ch4[x], desc[x])
@@ -47,8 +50,6 @@ def childprefix (a, gen_ips_addr):
 			print ('mascara ainda nao programada ' + a)
 	return gen_ips_addr
 	
-gen_ips_addr = []
-desc = ['VLAN_MGMT','VLAN_IS','VLAN_CLOCK','VLAN_WIFI','VLAN_PRINTERS','VLAN_HANDHELD','VLAN_OPERATOR','VLAN_CAMERAS','VLAN_CORP']
 
 #  X.Y.Z.0   / 28   -   mgmt 	#  X.Y.Z.16  / 28   -   is			#  X.Y.Z.24  / 28   -   REP 
 #  X.Y.Z.32  / 27   -   Aruba 	#  X.Y.Z.64  / 26   -   Printers 	#  X.Y.Z.128 / 25   -   HH
