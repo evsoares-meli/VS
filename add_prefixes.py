@@ -109,6 +109,8 @@ class ProvisionPrefixes (Script):
 		
 		c = len(c_preffix)
 		for d in range(1, c):
+			prefix = Prefix.objects.get (prefix = vlan)
+			self.log_info (prefix)
 			prefix = Prefix (
 				site = site,
 				prefix = c_preffix[d][0],
