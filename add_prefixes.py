@@ -90,10 +90,10 @@ class ProvisionPrefixes (Script):
 	
 	def run (self, data, commit):
 		prefix_name = data['prefix_name']
-		site = data['site']
+		site_name = data['site']
 		tenant = data['site_tenant']
 		status = data['status']
 		vlan = ''
-		c_preffix = childprefix(prefix_name, site)
-		self.log_info (site)
-		prefix = self.create_prefix (prefix_name, site, vlan, tenant, status, c_preffix)
+		c_preffix = childprefix(prefix_name, site_name)
+		self.log_info (site_name)
+		prefix = self.create_prefix (prefix_name, site_name, vlan, tenant, status, c_preffix)
