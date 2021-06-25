@@ -118,8 +118,8 @@ class ProvisionPrefixes (Script):
 				description = c_preffix[d][1]
 			)
 		
-		prefix.save ()
-		self.log_success ("Created mgmt prefix %s" % prefix)
+			prefix.save ()
+			self.log_success ("Created mgmt prefix %s" % prefix)
 
 		return prefix	
 	
