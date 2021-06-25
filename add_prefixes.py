@@ -50,7 +50,7 @@ class ProvisionPrefixes (Script):
 #				  Methods													#
 ################################################################################
 
-	def create_prefix (self, prefix_name, site, vlan, tenant, status):
+	def create_prefix (self, prefix_name, site, vlan, tenant, status, c_preffix):
 		prefix_cidr = prefix_name
 		try:
 			prefix = Prefix.objects.get (prefix = prefix_cidr)
@@ -93,5 +93,5 @@ class ProvisionPrefixes (Script):
 		tenant = data['site_tenant']
 		status = data['status']
 		vlan = ''
-		childprefix(prefix_name, site)
-		prefix = self.create_prefix (prefix_name, site, vlan, tenant, status)
+		c_preffix = childprefix(prefix_name, desc)
+		prefix = self.create_prefix (prefix_name, site, vlan, tenant, status, c_preffix)
