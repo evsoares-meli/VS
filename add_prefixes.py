@@ -1,6 +1,6 @@
-from dcim.ipsplit import *
-from math import floor
 from django.utils.text import slugify
+
+from dcim.ipsplit import *
 from dcim.choices import *
 from dcim.models import Cable, Device, DeviceRole, DeviceType, Platform, Rack, RackRole, Site
 #from dcim.models.device_components import FrontPort, Interface, RearPort
@@ -50,7 +50,7 @@ class ProvisionPrefixes (Script):
 #				  Methods													#
 ################################################################################
 
-	def create_prefix (self, prefix_name, site, vlan, tenant, status, c_preffix):
+	def create_prefix (self, prefix_name, site, vlan, tenant, status):
 		prefix_cidr = prefix_name
 		try:
 			prefix = Prefix.objects.get (prefix = prefix_cidr)
@@ -62,26 +62,24 @@ class ProvisionPrefixes (Script):
 
 		prefix = Prefix (
 			site = site,
-			prefix = c_preffix[0][0],
+			prefix = prefix_cidr,
 			status = status,
 			tenant = tenant,
 			role = Role.objects.get (name = 'Production'),
-			description = c_preffix[0][1]
+			description = "Prefixo" + str(site)
 		)
 		
 		prefix.save ()
 		self.log_success ("Created mgmt prefix %s" % prefix)
 		
-		c = len(c_preffix)
-		for d in range(1, c):
-			prefix = Prefix (
-				site = site,
-				prefix = c_preffix[d][0],
-				status = status,
-				tenant = tenant,
-				role = Role.objects.get (name = 'Production'),
-				description = c_preffix[d][1]
-			)
+		prefix = Prefix (
+			site = site,
+			prefix = '10.198.196.0/28',
+			status = status,
+			tenant = tenant,
+			role = Role.objects.get (name = 'Production'),
+			description = "Prefixo" + str(site)
+		)
 		
 		prefix.save ()
 		self.log_success ("Created mgmt prefix %s" % prefix)
@@ -90,10 +88,10 @@ class ProvisionPrefixes (Script):
 	
 	def run (self, data, commit):
 		prefix_name = data['prefix_name']
-		site_name = data['site']
+		site = data['site']
 		tenant = data['site_tenant']
 		status = data['status']
 		vlan = ''
-		c_preffix = childprefix(prefix_name, site_name)
-		self.log_info (site_name)
-		prefix = self.create_prefix (prefix_name, site_name, vlan, tenant, status, c_preffix)
+
+		self.log_info (site)
+		prefix = self.create_prefix (prefix_name, site, vlan, tenant, status)
