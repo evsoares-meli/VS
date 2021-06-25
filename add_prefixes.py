@@ -109,8 +109,8 @@ class ProvisionPrefixes (Script):
 		
 		c = len(c_preffix)
 		for d in range(1, c):
-			prefix = Prefix.objects.get (prefix = vlan)
-			self.log_info (prefix)
+			vlan_id = VLAN.objects.get (site = site, vid = c_preffix[d][2])
+			self.log_info (vlan_id)
 			prefix = Prefix (
 				site = site,
 				prefix = c_preffix[d][0],
@@ -134,7 +134,6 @@ class ProvisionPrefixes (Script):
 		status = data['status']
 		vlan = ''
 		c_preffix = childprefix(prefix_name, desc)
-		self.log_info (c_preffix)
 		prefix = self.create_prefix (prefix_name, site_name, vlan, tenant, status, c_preffix)
 
 
