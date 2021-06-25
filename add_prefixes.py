@@ -112,12 +112,13 @@ class ProvisionPrefixes (Script):
 			prefix = Prefix (
 				site = site,
 				prefix = c_preffix[d][0],
+				vid = c_preffix[d][0][0],
 				status = status,
 				tenant = tenant,
 				role = Role.objects.get (name = 'Production'),
 				description = c_preffix[d][1]
 			)
-		
+
 			prefix.save ()
 			self.log_success ("Created mgmt prefix %s" % prefix)
 
