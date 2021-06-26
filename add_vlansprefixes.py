@@ -129,7 +129,7 @@ class ProvisionVlans (Script):
 			prefix = Prefix (
 				site = site,
 				prefix = prefix_range,
-				#vlan = c_prefix[d][2],
+				vlan = vlan,
 				status = status,
 				tenant = tenant,
 				role = Role.objects.get (name = 'Production'),
@@ -137,7 +137,7 @@ class ProvisionVlans (Script):
 			)
 
 			prefix.save ()
-			self.log_success ("Created mgmt prefix %s" % prefix)
+			self.log_success ("Created Prefix %s" % prefix)
 
 		return prefix	
 
