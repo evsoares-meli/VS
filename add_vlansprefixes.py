@@ -11,7 +11,7 @@ from extras.scripts import *
 
 #Functions and Vars
 desc = ['VLAN_MGMT','VLAN_IS','VLAN_ACCESSCTRL','VLAN_WIFI','VLAN_PRINTERS','VLAN_HANDHELD','VLAN_OPERATOR','VLAN_CAMERAS','VLAN_CORP','PRI_LINK','SEC_LINK']
-vlan_range = ['100','10','150','20','40','70','80','30','50','300','310']
+vlan_range = ['1','100','10','150','20','40','70','80','30','50','300','310']
 
 #vlan_range = ['10','20','30','40','50','70','80','100','150','300','310']
 #vdescription = ['Vlan-IS','Vlan-Aruba','Vlan-Cameras','Vlan-Printers','Vlan-Corp','Vlan-HandHeld','Vlan-Operators','Vlan-Mgmt','Vlan-AccessControl', 'Vlan-Enlace1', 'Vlan-Enlace2']
@@ -153,19 +153,16 @@ class ProvisionVlans (Script):
 		tenant = data['site_tenant']
 
 #		vlan = ''
-		
-		#VLAN CREATE
-		j = len(vlan_range)
-		for i in range(0, j):
-			vlanrange = vlan_range[i]
-			desc_vlan = desc[i]
-			vlan = self.create_mgmt_vlan (site, vlanrange, vlan_name, vlan_status, tenant, vlangroup, desc_vlan)
-		
-		#PREFIX CREATE
 		c_prefix = childprefix(prefix_name, prefix_desc)
-		self.log_info (c_prefix)
 		c = len(c_prefix)
 		for d in range(1, c):
+		
+			#VLAN CREATE
+			vlanrange = vlan_range[d]
+			desc_vlan = desc[d]
+			vlan = self.create_mgmt_vlan (site, vlanrange, vlan_name, vlan_status, tenant, vlangroup, desc_vlan)
+		
+			#PREFIX CREATE
 			prefix_range = c_prefix[d][0]
 			desc_prefix = c_prefix[d][1]
 			prefix = self.create_prefix (prefix_name, site, vlan, tenant, prefix_status, prefix_range, desc_prefix)
@@ -189,4 +186,6 @@ class ProvisionVlans (Script):
 		]
 		output.append(','.join(attrs))
 
-	return '\n'.join(output) """
+	return '\n'.join(output) 
+	use to log	self.log_info (c_prefix)
+	"""
