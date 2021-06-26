@@ -151,16 +151,15 @@ class ProvisionVlans (Script):
 		vlangroup = data['vlan_group']
 		vlan_status = data['vlan_status']
 		tenant = data['site_tenant']
-		
-		#desc = 'Prefix ' + site.name #? atrapalhando o vlan
-		vlan = ''
+
+#		vlan = ''
 		
 		#VLAN CREATE
-	#	j = len(vlan_range)
-	#	for i in range(0, j):
-	#		vlanrange = vlan_range[i]
-	#		desc_vlan = desc[i]
-	#		vlan = self.create_mgmt_vlan (site, vlanrange, vlan_name, vlan_status, tenant, vlangroup, desc_vlan)
+		j = len(vlan_range)
+		for i in range(0, j):
+			vlanrange = vlan_range[i]
+			desc_vlan = desc[i]
+			vlan = self.create_mgmt_vlan (site, vlanrange, vlan_name, vlan_status, tenant, vlangroup, desc_vlan)
 		
 		#PREFIX CREATE
 		c_prefix = childprefix(prefix_name, prefix_desc)
