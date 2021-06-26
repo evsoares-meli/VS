@@ -118,17 +118,25 @@ class ProvisionVlans (Script):
 			return prefix
 		except Prefix.DoesNotExist:
 			pass
-			
-			prefix = Prefix (
-				site = site,
-				prefix = prefix_range,
-				vlan = vlan,
-				status = status,
-				tenant = tenant,
-				role = Role.objects.get (name = 'Production'),
-				description = desc_prefix
-			)
-
+			if vlan > 1:
+				prefix = Prefix (
+					site = site,
+					prefix = prefix_range,
+					vlan = vlan,
+					status = status,
+					tenant = tenant,
+					role = Role.objects.get (name = 'Production'),
+					description = desc_prefix
+				)
+			else:
+				prefix = Prefix (
+					site = site,
+					prefix = prefix_range,
+					status = status,
+					tenant = tenant,
+					role = Role.objects.get (name = 'Production'),
+					description = desc_prefix
+				)
 			prefix.save ()
 			self.log_success ("Created Prefix %s" % prefix)
 
@@ -147,7 +155,10 @@ class ProvisionVlans (Script):
 
 		c_prefix = childprefix(prefix_name, prefix_desc)
 		c = len(c_prefix)
-
+		vlan = '1'
+		#Creates parent prefix
+		prefix = self.create_prefix (prefix_name, site, vlan, tenant, prefix_status, c_prefix[0][0], c_prefix[0][1])
+		
 		#Creates prefix with vlan
 		for d in range(1, c):
 		
@@ -165,9 +176,7 @@ class ProvisionVlans (Script):
 		vlan = self.create_mgmt_vlan (site, vlan_range[10], vlan_name, vlan_status, tenant, vlangroup, desc[10])
 		vlan = self.create_mgmt_vlan (site, vlan_range[11], vlan_name, vlan_status, tenant, vlangroup, desc[11])
 	
-		#Creates parent prefix
 		
-		prefix = self.create_prefix (prefix_name, site, vlan, tenant, prefix_status, prefix_range[0], desc_prefix[0])
 
 
 
