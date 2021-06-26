@@ -153,7 +153,7 @@ class ProvisionVlans (Script):
 		vlan_status = data['vlan_status']
 		tenant = data['site_tenant']
 		
-		desc = 'Prefix ' + site.name #?
+		#desc = 'Prefix ' + site.name #? atrapalhando o vlan
 		vlan = ''
 		
 		#VLAN CREATE
