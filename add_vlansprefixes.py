@@ -55,7 +55,8 @@ def childprefix (a, gen_ips_addr):
 			count_m = len(nmask)
 			for x in range(0, count_m):
 				#printIps(nmask[x], oct1, oct2, ch3[x], ch4[x], desc[x])
-				gen_ips_addr = gen_ips_addr + [[('{}.{}.{}.{}/{}'.format(oct1,oct2,ch3[x],ch4[x],nmask[x])),desc[x],vlan[x]]]
+				#gen_ips_addr = gen_ips_addr + [[('{}.{}.{}.{}/{}'.format(oct1,oct2,ch3[x],ch4[x],nmask[x])),desc[x],vlan[x]]]
+				gen_ips_addr = gen_ips_addr + [[('{}.{}.{}.{}/{}'.format(oct1,oct2,ch3[x],ch4[x],nmask[x])),desc[x]]]
 		else:
 			print ('mascara ainda nao programada ' + a)
 	return gen_ips_addr
