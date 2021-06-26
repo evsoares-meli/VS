@@ -10,7 +10,7 @@ from ipam.models import IPAddress, Prefix, Role, VLAN, VLANGroup
 from extras.scripts import *
 
 #Functions and Vars
-desc = ['VLAN_MGMT','VLAN_IS','VLAN_CLOCK','VLAN_WIFI','VLAN_PRINTERS','VLAN_HANDHELD','VLAN_OPERATOR','VLAN_CAMERAS','VLAN_CORP','PRI_LINK','SEC_LINK']
+desc = ['VLAN_MGMT','VLAN_IS','VLAN_ACCESSCTRL','VLAN_WIFI','VLAN_PRINTERS','VLAN_HANDHELD','VLAN_OPERATOR','VLAN_CAMERAS','VLAN_CORP','PRI_LINK','SEC_LINK']
 vlan_range = ['100','10','150','20','40','70','80','30','50','300','310']
 
 #vlan_range = ['10','20','30','40','50','70','80','100','150','300','310']
@@ -114,28 +114,26 @@ class ProvisionVlans (Script):
 
 			return vlan
 
-	def create_prefix (self, prefix_name, site, vlan, tenant, status, c_preffix):
+	def create_prefix (self, prefix_name, site, vlan, tenant, status, prefix_range, desc_prefix):
 		prefix_cidr = prefix_name
 		try:
-			#prefix = Prefix.objects.get (prefix = prefix_cidr)
-			#self.log_info ("Mgmt prefix %s already present, carrying on." % prefix)
-			prefix = VLAN.objects.get (site = site.name, vid = c_preffix[1][2])
+			prefix = Prefix.objects.get (prefix = prefix_cidr)
 			self.log_info ("Mgmt prefix %s already present, carrying on." % prefix)
+			#prefix = VLAN.objects.get (site = site.name, vid = c_prefix[1][2])
+			#self.log_info ("Mgmt prefix %s already present, carrying on." % prefix)
 
 			return prefix
 		except Prefix.DoesNotExist:
 			pass
-		
-		c = len(c_preffix)
-		for d in range(1, c):
+			
 			prefix = Prefix (
 				site = site,
-				prefix = c_preffix[d][0],
-				#vlan = c_preffix[d][2],
+				prefix = prefix_range,
+				#vlan = c_prefix[d][2],
 				status = status,
 				tenant = tenant,
 				role = Role.objects.get (name = 'Production'),
-				description = c_preffix[d][1]
+				description = desc_prefix
 			)
 
 			prefix.save ()
@@ -157,18 +155,20 @@ class ProvisionVlans (Script):
 		vlan = ''
 		
 		#VLAN CREATE
-		j = len(vlan_range)
-		for i in range(0, j):
-			vlanrange = vlan_range[i]
-			desc_vlan = desc[i]
-			vlan = self.create_mgmt_vlan (site, vlanrange, vlan_name, vlan_status, tenant, vlangroup, desc_vlan)
+	#	j = len(vlan_range)
+	#	for i in range(0, j):
+	#		vlanrange = vlan_range[i]
+	#		desc_vlan = desc[i]
+	#		vlan = self.create_mgmt_vlan (site, vlanrange, vlan_name, vlan_status, tenant, vlangroup, desc_vlan)
 		
-	"""
 		#PREFIX CREATE
-		c_preffix = childprefix(prefix_name, desc)
-		self.log_info (c_preffix)
-		prefix = self.create_prefix (prefix_name, site, vlan, tenant, prefix_status, c_preffix)
-	"""
+		c_prefix = childprefix(prefix_name, desc)
+		#self.log_info (c_prefix)
+		c = len(c_prefix)
+		for d in range(1, c):
+			prefix_range = c_prefix[d][0],
+			desc_prefix = c_prefix[d][1]
+			prefix = self.create_prefix (prefix_name, site, vlan, tenant, prefix_status, prefix_range, desc_prefix)
 
 		
 
