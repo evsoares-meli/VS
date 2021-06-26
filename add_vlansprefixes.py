@@ -166,7 +166,8 @@ class ProvisionVlans (Script):
 		vlan = self.create_mgmt_vlan (site, vlan_range[11], vlan_name, vlan_status, tenant, vlangroup, desc[11])
 	
 		#Creates parent prefix
-		prefix = self.create_prefix (prefix_name, site, vlan, tenant, prefix_status, c_prefix[0], prefix_desc[0])
+		
+		prefix = self.create_prefix (prefix_name, site, vlan, tenant, prefix_status, prefix_range[0], desc_prefix[0])
 
 
 
