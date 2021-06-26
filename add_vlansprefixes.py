@@ -13,9 +13,6 @@ from extras.scripts import *
 desc = ['VLAN_MGMT','VLAN_IS','VLAN_ACCESSCTRL','VLAN_WIFI','VLAN_PRINTERS','VLAN_HANDHELD','VLAN_OPERATOR','VLAN_CAMERAS','VLAN_CORP','PRI_LINK','SEC_LINK']
 vlan_range = ['1','100','10','150','20','40','70','80','30','50','300','310']
 
-#vlan_range = ['10','20','30','40','50','70','80','100','150','300','310']
-#vdescription = ['Vlan-IS','Vlan-Aruba','Vlan-Cameras','Vlan-Printers','Vlan-Corp','Vlan-HandHeld','Vlan-Operators','Vlan-Mgmt','Vlan-AccessControl', 'Vlan-Enlace1', 'Vlan-Enlace2']
-
 def validaOct(num):
 	''' adjusts to /22 range '''
 	b = int(num)/4
@@ -54,11 +51,9 @@ def childprefix (a, gen_ips_addr):
 			nmask = [28,29,29,27,26,25,24,25,25]
 			count_m = len(nmask)
 			for x in range(0, count_m):
-				#printIps(nmask[x], oct1, oct2, ch3[x], ch4[x], desc[x])
-				#gen_ips_addr = gen_ips_addr + [[('{}.{}.{}.{}/{}'.format(oct1,oct2,ch3[x],ch4[x],nmask[x])),desc[x],vlan[x]]]
 				gen_ips_addr = gen_ips_addr + [[('{}.{}.{}.{}/{}'.format(oct1,oct2,ch3[x],ch4[x],nmask[x])),desc[x]]]
 		else:
-			print ('mascara ainda nao programada ' + a)
+			print ('Netmask not acceptable yet ' + a)
 	return gen_ips_addr
 
 
@@ -66,7 +61,7 @@ class ProvisionVlans (Script):
 	class Meta:
 		name = "Provision Vlans and Prefixes"
 		description = "Provision multiples Vlans and Prefixes to a Site"
-		field_order = ['site', 'site_no']
+		field_order = ['site', 'prefix_name','prefix_status','vlan_name','vlan_group','vlan_status','tenant_group','site_tenant']
 		#commit_default = False
 	
 	#Front End Form
@@ -118,9 +113,7 @@ class ProvisionVlans (Script):
 	def create_prefix (self, prefix_name, site, vlan, tenant, status, prefix_range, desc_prefix):
 		try:
 			prefix = Prefix.objects.get (prefix = prefix_range)
-			self.log_info ("Mgmt prefix %s already present, carrying on." % prefix)
-			#prefix = VLAN.objects.get (site = site.name, vid = c_prefix[1][2])
-			#self.log_info ("Mgmt prefix %s already present, carrying on." % prefix)
+			self.log_info ("Prefix %s already present, carrying on." % prefix)
 
 			return prefix
 		except Prefix.DoesNotExist:
@@ -141,7 +134,7 @@ class ProvisionVlans (Script):
 
 		return prefix	
 
-#Run	
+	#Run	
 	def run (self, data, commit): #prefix
 		site = data['site']
 		prefix_name = data['prefix_name']
@@ -152,9 +145,10 @@ class ProvisionVlans (Script):
 		vlan_status = data['vlan_status']
 		tenant = data['site_tenant']
 
-#		vlan = ''
 		c_prefix = childprefix(prefix_name, prefix_desc)
 		c = len(c_prefix)
+
+		#Creates prefix with vlan
 		for d in range(1, c):
 		
 			#VLAN CREATE
@@ -167,7 +161,13 @@ class ProvisionVlans (Script):
 			desc_prefix = c_prefix[d][1]
 			prefix = self.create_prefix (prefix_name, site, vlan, tenant, prefix_status, prefix_range, desc_prefix)
 
-		
+		#Creates Wan Vlans
+		vlan = self.create_mgmt_vlan (site, vlan_range[10], vlan_name, vlan_status, tenant, vlangroup, desc[10])
+		vlan = self.create_mgmt_vlan (site, vlan_range[11], vlan_name, vlan_status, tenant, vlangroup, desc[11])
+	
+		#Creates parent prefix
+
+
 
 
 
