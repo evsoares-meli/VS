@@ -147,6 +147,7 @@ class ProvisionVlans (Script):
 		site = data['site']
 		prefix_name = data['prefix_name']
 		prefix_status = data['prefix_status']
+		prefix_desc = 'Prefix ' + site.name
 		vlan_name = data['vlan_name']
 		vlangroup = data['vlan_group']
 		vlan_status = data['vlan_status']
@@ -163,7 +164,7 @@ class ProvisionVlans (Script):
 	#		vlan = self.create_mgmt_vlan (site, vlanrange, vlan_name, vlan_status, tenant, vlangroup, desc_vlan)
 		
 		#PREFIX CREATE
-		c_prefix = childprefix(prefix_name, desc)
+		c_prefix = childprefix(prefix_name, prefix_desc)
 		self.log_info (c_prefix)
 		c = len(c_prefix)
 		for d in range(1, c):
