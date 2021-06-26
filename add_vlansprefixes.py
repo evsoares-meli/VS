@@ -10,7 +10,7 @@ from ipam.models import IPAddress, Prefix, Role, VLAN, VLANGroup
 from extras.scripts import *
 
 #Functions and Vars
-desc = ['Parent Prefix','VLAN_MGMT','VLAN_IS','VLAN_ACCESSCTRL','VLAN_WIFI','VLAN_PRINTERS','VLAN_HANDHELD','VLAN_OPERATOR','VLAN_CAMERAS','VLAN_CORP','PRI_LINK','SEC_LINK']
+desc = ['VLAN_MGMT','VLAN_IS','VLAN_ACCESSCTRL','VLAN_WIFI','VLAN_PRINTERS','VLAN_HANDHELD','VLAN_OPERATOR','VLAN_CAMERAS','VLAN_CORP','PRI_LINK','SEC_LINK']
 vlan_range = ['1','100','10','150','20','40','70','80','30','50','300','310']
 
 def validaOct(num):
@@ -164,12 +164,12 @@ class ProvisionVlans (Script):
 		
 			#VLAN CREATE
 			vlanrange = vlan_range[d]
-			desc_vlan = desc[d]
+			desc_vlan = c_prefix[d][1]
 			vlan = self.create_mgmt_vlan (site, vlanrange, vlan_name, vlan_status, tenant, vlangroup, desc_vlan)
 		
 			#PREFIX CREATE
-			prefix_range = c_prefix[d+1][0]
-			desc_prefix = c_prefix[d+1][1]
+			prefix_range = c_prefix[d][0]
+			desc_prefix = c_prefix[d][1]
 			prefix = self.create_prefix (prefix_name, site, vlan, tenant, prefix_status, prefix_range, desc_prefix)
 
 		#Creates Wan Vlans
