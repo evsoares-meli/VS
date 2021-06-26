@@ -174,7 +174,7 @@ class ProvisionVlans (Script):
 
 		#Creates Wan Vlans
 		vlan = self.create_mgmt_vlan (site, vlan_range[10], vlan_name, vlan_status, tenant, vlangroup, desc[10])
-		vlan = self.create_mgmt_vlan (site, vlan_range[11], vlan_name, vlan_status, tenant, vlangroup, desc[11])
+		vlan = self.create_mgmt_vlan (site, vlan_range[11], vlan_name, vlan_status, tenant, vlangroup, desc[10])
 	
 		
 
