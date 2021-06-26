@@ -164,10 +164,10 @@ class ProvisionVlans (Script):
 		
 		#PREFIX CREATE
 		c_prefix = childprefix(prefix_name, desc)
-		#self.log_info (c_prefix)
+		self.log_info (c_prefix)
 		c = len(c_prefix)
 		for d in range(1, c):
-			prefix_range = c_prefix[d][0],
+			prefix_range = c_prefix[d][0]
 			desc_prefix = c_prefix[d][1]
 			prefix = self.create_prefix (prefix_name, site, vlan, tenant, prefix_status, prefix_range, desc_prefix)
 
