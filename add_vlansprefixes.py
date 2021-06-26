@@ -118,7 +118,7 @@ class ProvisionVlans (Script):
 			return prefix
 		except Prefix.DoesNotExist:
 			pass
-			if vlan > 1:
+			if vlan != '1':
 				prefix = Prefix (
 					site = site,
 					prefix = prefix_range,
