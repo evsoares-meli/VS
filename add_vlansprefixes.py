@@ -157,7 +157,8 @@ class ProvisionVlans (Script):
 		vlan = ''
 		
 		#VLAN CREATE
-		for i in range(0, 11):
+		j = len(vlan_range)
+		for i in range(0, j):
 			vlanrange = vlan_range[i]
 			desc = desc[i]
 			vlan = self.create_mgmt_vlan (site, vlanrange, vlan_name, vlan_status, tenant, vlangroup, desc)
