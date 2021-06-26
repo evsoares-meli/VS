@@ -1,9 +1,7 @@
 from math import floor
 
 def validaOct(num):
-	'''
-	altera octeto para o octeto de rede /22
-	'''
+	'''	altera octeto para o octeto de rede /22	'''
 	b = int(num)/4
 	numf = 4 * floor(b)
 	return numf
