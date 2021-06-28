@@ -10,7 +10,7 @@ from ipam.models import IPAddress, Prefix, Role, VLAN, VLANGroup
 from extras.scripts import *
 
 #Functions and Vars
-desc = ['VLAN_MGMT','VLAN_IS','VLAN_ACCESSCTRL','VLAN_WIFI','VLAN_PRINTERS','VLAN_HANDHELD','VLAN_OPERATOR','VLAN_CAMERAS','VLAN_CORP','PRI_LINK','SEC_LINK']
+desc = ['VLAN_MGMT','VLAN_IS','VLAN_ACCESSCONTROL','VLAN_WIFI','VLAN_PRINTERS','VLAN_HANDHELD','VLAN_OPERATOR','VLAN_CAMERAS','VLAN_CORP','PRIMARY_LINK','SECONDARY_LINK']
 vlan_range = ['1','100','10','150','20','40','70','80','30','50','300','310']
 
 def validaOct(num):
