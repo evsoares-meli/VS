@@ -10,8 +10,8 @@ from ipam.models import IPAddress, Prefix, Role, VLAN, VLANGroup
 from extras.scripts import *
 
 #Functions and Vars
-desc = ['VLAN_MGMT','VLAN_CCTV_MON','VLAN_WIFI','VLAN_PRINTERS','VLAN_HANDHELD','VLAN_OPERATOR','VLAN_CLOCK','VLAN_ACCESSCONTROL','VLAN_IS','VLAN_CORP','VLAN_CAMERAS','PRIMARY_LINK','SECONDARY_LINK']
-vlan_range = ['1','100','280','20','40','70','80','160','150','10','50','30','300','310']
+desc = ['VLAN_MGMT','VLAN_CCTV_MON','VLAN_WIFI','VLAN_PRINTERS','VLAN_HANDHELD','VLAN_OPERATOR','VLAN_CLOCK','VLAN_IS','VLAN_ACCESSCONTROL','VLAN_CORP','VLAN_CAMERAS','PRIMARY_LINK','SECONDARY_LINK']
+vlan_range = ['1','100','280','20','40','70','80','160','10','150','50','30','300','310']
 
 def validaOct(num):
 	''' adjusts to /22 range '''
@@ -47,8 +47,8 @@ def childprefix (a, gen_ips_addr):
 			oct3 = validaOct(oct3)
 			oct3 = validaIp(oct3, a)
 			ch3 = [oct3,oct3,oct3,oct3,oct3,oct3+1,oct3+2,oct3+2,oct3+2,oct3+2,oct3+3]
-			ch4 = [0,16,32,64,128,0,0,16,32,128,0]
-			nmask = [28,28,27,26,25,24,29,28,28,25,25]
+			ch4 = [0,16,32,64,128,0,0,8,16,128,0]
+			nmask = [28,28,27,26,25,24,29,29,28,25,25]
 			count_m = len(nmask)
 			for x in range(0, count_m):
 				gen_ips_addr = gen_ips_addr + [[('{}.{}.{}.{}/{}'.format(oct1,oct2,ch3[x],ch4[x],nmask[x])),desc[x]]]
