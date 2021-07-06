@@ -46,7 +46,7 @@ def childprefix (a, gen_ips_addr):
 			oct3 = int(ipr[2])
 			oct3 = validaOct(oct3)
 			oct3 = validaIp(oct3, a)
-			ch3 = [oct3,oct3,oct3,oct3,oct3,oct3,oct3+1,oct3+1,oct3+1,oct3+1,oct3+2]
+			ch3 = [oct3,oct3,oct3,oct3,oct3,oct3+1,oct3+2,oct3+2,oct3+2,oct3+2,oct3+3]
 			ch4 = [0,16,32,64,128,0,0,8,16,128,0]
 			nmask = [28,28,27,26,25,24,29,29,28,25,25]
 			count_m = len(nmask)
