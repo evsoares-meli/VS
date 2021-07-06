@@ -13,48 +13,23 @@ class NewBranchScript(Script):
         description = "Provision a devices to a site"
         field_order = ['device_name', 'device_count', 'Device_role', 'manufacturer', 'device_model','site_name','tenant_group', 'stie_tenant']
 
-    site_name = ObjectVar(
-        label='Site',
-        model=Site
-    )
-    tenant_group = ObjectVar(
-        model=TenantGroup
-    )
-    site_tenant = ObjectVar(
-        label='Tenant',
-        model=Tenant,
-        display_field='model',
-        query_params={
-            'group_id': '$tenant_group'
-        }
-    )
-    device_name = StringVar(
-       # label="teste",
-        description="Device name whitout number"
-    )
-    device_count = IntegerVar(
-        description="Number of devices to create"
-    )
-    device_status = ChoiceVar(
-        DeviceStatusChoices, default=DeviceStatusChoices.STATUS_PLANNED
-    )
-    manufacturer = ObjectVar(
-        model=Manufacturer,
-        required=False
-    )
-    device_model = ObjectVar(
-        description="Device model",
-        model=DeviceType,
-        display_field='model',
-        query_params={
-            'manufacturer_id': '$manufacturer'
-        }
-    )
-    Device_role = ObjectVar(
-        model=DeviceRole,
-        required=False
-    )
+    site_name = ObjectVar( label='Site', model=Site )
 
+    tenant_group = ObjectVar( model=TenantGroup, )
+
+    site_tenant = ObjectVar( label='Tenant', model=Tenant, display_field='model', query_params={'group_id': '$tenant_group'} )
+    
+    device_name = StringVar( description="Device name whitout number" )
+
+    device_count = IntegerVar( description="Number of devices to create" )
+
+    device_status = ChoiceVar( DeviceStatusChoices, default=DeviceStatusChoices.STATUS_PLANNED )
+
+    manufacturer = ObjectVar( model=Manufacturer, required=False )
+    
+    device_model = ObjectVar( description="Device model", model=DeviceType, display_field='model', query_params={'manufacturer_id': '$manufacturer'} )
+    
+    Device_role = ObjectVar( model=DeviceRole, required=False )
 
     def run(self, data, commit):
 
@@ -62,7 +37,7 @@ class NewBranchScript(Script):
         for i in range(1, data['device_count'] + 1):
             i_str = str(i)
             I = i_str.zfill(3)
-            switch = Device(
+            device = Device(
                 device_type=data['device_model'],
                 name=f"{data['device_name']}{I}",
                 site=data['site_name'],
@@ -70,18 +45,18 @@ class NewBranchScript(Script):
                 status=data['device_status'],
                 device_role=data['Device_role']
             )
-            switch.save()
-            self.log_success(f"Created new switch: {switch}")
+            device.save()
+            self.log_success(f"Created new Device: {device}")
 
         # Generate a CSV table of new devices
         output = [
             'name,make,model'
         ]
-        for switch in Device.objects.filter(site=switch.site):
+        for device in Device.objects.filter(site=device.site):
             attrs = [
-                switch.name,
-                switch.device_type.manufacturer.name,
-                switch.device_type.model
+                device.name,
+                device.device_type.manufacturer.name,
+                device.device_type.model
             ]
             output.append(','.join(attrs))
 
