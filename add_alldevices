@@ -1,0 +1,36 @@
+from math import floor
+from django.utils.text import slugify
+from dcim.choices import *
+from dcim.models import Cable, Device, DeviceRole, DeviceType, Platform, Rack, RackRole, Site
+from dcim.models.device_components import FrontPort, Interface, RearPort
+from tenancy.models import TenantGroup, Tenant
+from ipam.choices import *
+from ipam.models import IPAddress, Prefix, Role, VLAN, VLANGroup
+
+from extras.scripts import *
+
+class ProvisionAllDevices (Script):
+	class Meta:
+		name = "Provision all devices needed for a startup"
+		description = "Provision all devices to a Site"
+		field_order = ['site', 'prefix_name','prefix_status','vlan_name','vlan_group','vlan_status','tenant_group','site_tenant']
+		#commit_default = False
+	
+	#Front End Form
+	site = ObjectVar (description = "Site to be deployed", queryset = Site.objects.all ())
+
+	prefix_name = StringVar ( label="Prefix", description="i.e: 10.0.0.0/22" )
+
+	prefix_status = ChoiceVar ( PrefixStatusChoices, default=PrefixStatusChoices.STATUS_RESERVED, label='Prefix Status' )
+
+	vlan_id = ObjectVar ( model= VLAN, query_params={'Site_id': '$site'} )
+	
+	vlan_name = StringVar ( label="Vlan Name", description="Vlan name whitout number i.e: VXXYYZZ" )
+
+	vlan_group = ObjectVar ( required=False, model= VLANGroup, query_params={'Site_id': '$site'} )
+	
+	vlan_status = ChoiceVar ( VLANStatusChoices, default=VLANStatusChoices.STATUS_RESERVED, label='Vlan Status' )
+	
+	tenant_group = ObjectVar( model=TenantGroup )
+
+	site_tenant = ObjectVar( label='Tenant', model=Tenant, display_field='model', query_params={'group_id': '$tenant_group'} )
