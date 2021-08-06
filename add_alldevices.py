@@ -72,6 +72,8 @@ class ProvisionAllDevices (Script):
 
 	prefix_status = ChoiceVar ( PrefixStatusChoices, default=PrefixStatusChoices.STATUS_RESERVED, label='Prefix Status' )
 
+	prefix_id = ObjectVar ( model= Prefix, query_params={'Site_id': '$site'} )
+
 	vlan_id = ObjectVar ( model= VLAN, query_params={'Site_id': '$site'} )
 	
 	vlan_name = StringVar ( label="Vlan Name", description="Vlan name whitout number i.e: VXXYYZZ" )
