@@ -44,15 +44,10 @@ class ProvisionMDevices (Script):
 			vlan = VLAN.objects.get (site = site, vid = 100)
 				
 			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
-			addr =pfx.prefix
-			addr = addr.split('/')
-			ip = addr[0]
-			mask = addr[1]
-			octet = ip.split('.')
-			ipsw = '{}.{}.{}.2/{}'.format(octet[0],octet[1],octet[2],mask)
+			#pfx.prefix[2] #sw 
 
 
-			self.log_info ("Vlan %s already present, carrying on." % ipsw)
+			self.log_info ("Vlan %s already present, carrying on." % pfx.prefix[2])
 
 
 			return vlan
@@ -73,3 +68,15 @@ class ProvisionMDevices (Script):
 		#	desc = vdescription[i]
 		vlan = self.create_mgmt_vlan (site, sitetenant)
 		
+
+
+
+
+
+
+'''addr = addr.split('/')
+ip = addr[0]
+mask = addr[1]
+octet = ip.split('.')
+ipsw = '{}.{}.{}.2/{}'.format(octet[0],octet[1],octet[2],mask)
+'''
