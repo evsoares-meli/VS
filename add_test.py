@@ -44,8 +44,8 @@ class ProvisionMDevices (Script):
 			vlan = VLAN.objects.get (site = site, vid = 100)
 				
 			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
-			
-			addr = pfx.split('/')
+			addr =pfx.prefix
+			addr = addr.split('/')
 			ip = addr[0]
 			mask = addr[1]
 			octet = ip.split('.')
