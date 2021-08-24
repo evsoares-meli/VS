@@ -41,7 +41,7 @@ class ProvisionMDevices (Script):
 
 	def create_mgmt_vlan (self, site, sitetenant):
 		try:
-			vlan = VLAN.objects.get (site = site, vlan__vid = 100)
+			vlan = VLAN.objects.get (site = site, vid = 100)
 			print(vlan)
 			self.log_info ("Vlan %s already present, carrying on." % vlan)
 
