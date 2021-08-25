@@ -84,7 +84,7 @@ class ProvisionMDevices (Script):
 	)
 	device_status = ChoiceVar (
 		DeviceStatusChoices, 
-		default=DeviceStatusChoices.STATUS_RESERVED, 
+		default=DeviceStatusChoices.STATUS_PLANNED, 
 		label='Device Status'
 	)
 	'''devices_role = ObjectVar(
