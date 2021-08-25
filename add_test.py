@@ -24,7 +24,8 @@ class ProvisionMDevices (Script):
 	)
 	
 	tenant_group = ObjectVar(
-		model=TenantGroup
+		model=TenantGroup,
+		default='25'	#change to production id
 	)
 	site_tenant = ObjectVar(
 		label='Tenant',
