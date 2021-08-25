@@ -34,7 +34,25 @@ class ProvisionMDevices (Script):
 			'group_id': '$tenant_group'
 		}
 	)
+	device_name = StringVar( 
+		description="Device name whitout number, ej UYSCMV"
+	)
+	manufacturer = ObjectVar(
+		model=Manufacturer,
+		required=False 
+	)
 
+	device_model = ObjectVar(
+		description="Device model",
+		model=DeviceType, 
+		display_field='model', 
+		query_params={'manufacturer_id': '$manufacturer'} 
+	)
+
+	Device_role = ObjectVar(
+		model=DeviceRole,
+		required=False 
+	)
 ################################################################################             
 #                  Methods                                                    #
 ################################################################################
