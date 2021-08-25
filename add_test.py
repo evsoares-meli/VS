@@ -34,22 +34,54 @@ class ProvisionMDevices (Script):
 			'group_id': '$tenant_group'
 		}
 	)
-	device_name = StringVar( 
-		description="Device name whitout number, ej UYSCMV"
+	devices_name = StringVar( 
+		description="Devices name prefix whitout numbers, ej UYSCMV"
 	)
-	manufacturer = ObjectVar(
+	firewall_manufacturer = ObjectVar(
 		model=Manufacturer,
 		required=False 
 	)
 
-	device_model = ObjectVar(
+	firewall_model = ObjectVar(
 		description="Device model",
 		model=DeviceType, 
 		display_field='model', 
-		query_params={'manufacturer_id': '$manufacturer'} 
+		query_params={'manufacturer_id': '$firewall_manufacturer'} 
+	)
+	core_manufacturer = ObjectVar(
+		model=Manufacturer,
+		required=False 
 	)
 
-	Device_role = ObjectVar(
+	core_model = ObjectVar(
+		description="Device model",
+		model=DeviceType, 
+		display_field='model', 
+		query_params={'manufacturer_id': '$core_manufacturer'} 
+	)
+	cam_manufacturer = ObjectVar(
+		model=Manufacturer,
+		required=False 
+	)
+
+	cam_model = ObjectVar(
+		description="Device model",
+		model=DeviceType, 
+		display_field='model', 
+		query_params={'manufacturer_id': '$cam_manufacturer'} 
+	)
+	iap_manufacturer = ObjectVar(
+		model=Manufacturer,
+		required=False 
+	)
+
+	iap_model = ObjectVar(
+		description="Device model",
+		model=DeviceType, 
+		display_field='model', 
+		query_params={'manufacturer_id': '$iap_manufacturer'} 
+	)
+	devices_role = ObjectVar(
 		model=DeviceRole,
 		required=False 
 	)
