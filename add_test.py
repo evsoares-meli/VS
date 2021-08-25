@@ -72,6 +72,7 @@ class ProvisionMDevices (Script):
 	)
 	iap_manufacturer = ObjectVar(
 		model=Manufacturer,
+		default='Aruba',
 		required=False 
 	)
 
@@ -81,10 +82,15 @@ class ProvisionMDevices (Script):
 		display_field='model', 
 		query_params={'manufacturer_id': '$iap_manufacturer'} 
 	)
-	devices_role = ObjectVar(
+	device_status = ChoiceVar (
+		DeviceStatusChoices, 
+		default=DeviceStatusChoices.STATUS_RESERVED, 
+		label='Device Status'
+	)
+	'''devices_role = ObjectVar(
 		model=DeviceRole,
 		required=False 
-	)
+	)''' #fazer fixa
 ################################################################################             
 #                  Methods                                                    #
 ################################################################################
