@@ -39,45 +39,44 @@ class ProvisionMDevices (Script):
 	)
 	firewall_manufacturer = ObjectVar(
 		model=Manufacturer,
+		default='22',	#change to production id
 		required=False 
 	)
 
 	firewall_model = ObjectVar(
-		description="Device model",
 		model=DeviceType, 
 		display_field='model', 
 		query_params={'manufacturer_id': '$firewall_manufacturer'} 
 	)
 	core_manufacturer = ObjectVar(
 		model=Manufacturer,
+		default='2',	#change to production id
 		required=False 
 	)
 
 	core_model = ObjectVar(
-		description="Device model",
 		model=DeviceType, 
 		display_field='model', 
 		query_params={'manufacturer_id': '$core_manufacturer'} 
 	)
 	cam_manufacturer = ObjectVar(
 		model=Manufacturer,
+		default='2',	#change to production id
 		required=False 
 	)
 
 	cam_model = ObjectVar(
-		description="Device model",
 		model=DeviceType, 
 		display_field='model', 
 		query_params={'manufacturer_id': '$cam_manufacturer'} 
 	)
 	iap_manufacturer = ObjectVar(
 		model=Manufacturer,
-		default='10',
+		default='10',	#change to production id
 		required=False 
 	)
 
 	iap_model = ObjectVar(
-		description="Device model",
 		model=DeviceType, 
 		display_field='model', 
 		query_params={'manufacturer_id': '$iap_manufacturer'} 
