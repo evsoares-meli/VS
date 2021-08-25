@@ -72,7 +72,7 @@ class ProvisionMDevices (Script):
 	)
 	iap_manufacturer = ObjectVar(
 		model=Manufacturer,
-		default='Aruba',
+		default='aruba',
 		required=False 
 	)
 
