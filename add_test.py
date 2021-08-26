@@ -117,6 +117,7 @@ class ProvisionMDevices (Script):
 			)
 			fw.save()
 			self.log_success('Created device %s' % fw)
+			return fw
 
 
 
@@ -143,6 +144,7 @@ class ProvisionMDevices (Script):
 			)
 			sw.save()
 			self.log_success('Created device %s' % sw)
+			return sw
 
 
 
@@ -169,6 +171,7 @@ class ProvisionMDevices (Script):
 			)
 			cam.save()
 			self.log_success('Created device %s' % cam)
+			return cam
 
 
 
@@ -195,6 +198,7 @@ class ProvisionMDevices (Script):
 			)
 			iap.save()
 			self.log_success('Created device %s' % iap)
+			return iap
 
 	
 	
