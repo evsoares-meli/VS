@@ -112,7 +112,7 @@ class ProvisionMDevices (Script):
 				name = fw_name,
 				device_type = firewallmodel,
 				status = devicestatus,
-				device_role = 'firewall'
+				device_role = DeviceRole.objects.get (name = 'Firewall')
 				
 			)
 			fw.save()
@@ -139,7 +139,7 @@ class ProvisionMDevices (Script):
 				name = sw_name,
 				device_type = coremodel,
 				status = devicestatus,
-				device_role = 'core-switch'
+				device_role = DeviceRole.objects.get (name = 'Core Switch')
 				
 			)
 			sw.save()
@@ -166,7 +166,7 @@ class ProvisionMDevices (Script):
 				name = cam_name,
 				device_type = cammodel,
 				status = devicestatus,
-				device_role = 'core-switch'
+				device_role = DeviceRole.objects.get (name = 'Core Switch')
 				
 			)
 			cam.save()
@@ -193,7 +193,7 @@ class ProvisionMDevices (Script):
 				name = iap_name,
 				device_type = iapmodel,
 				status = devicestatus,
-				device_role = 'controller'
+				device_role = DeviceRole.objects.get (name = 'Controller')
 				
 			)
 			iap.save()
