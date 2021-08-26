@@ -120,18 +120,12 @@ class ProvisionMDevices (Script):
 			self.log_success('Created device %s' % fw)
 			
 			#set up mgmt IP
-			fw_mgmt_iface = Interface (
-				device = fw,
-				name = "vlan100",
-				type = InterfaceTypeChoices.TYPE_VIRTUAL,
-			)
-			fw_mgmt_iface.save ()
-
+			
 			fw_mgmt_ip = IPAddress (
 				interface = Interface.objects.get (device = fw, name = 'dmz'),
 				address = fwip
 			)
-			fw_mgmt_ip.save ()
+			fw_mgmt_ip.set()
 			fw.primary_ip4 = fw_mgmt_ip
 			fw.save()
 			self.log_success ("Configured %s on interface %s of %s" % (fw_mgmt_ip, fw_mgmt_ip.interface, fw))
