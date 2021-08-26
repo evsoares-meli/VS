@@ -87,47 +87,146 @@ class ProvisionMDevices (Script):
 		default=DeviceStatusChoices.STATUS_PLANNED, 
 		label='Device Status'
 	)
-	'''devices_role = ObjectVar(
-		model=DeviceRole,
-		required=False 
-	)''' #fazer fixa
+	'''devices_role = ObjectVar(		model=DeviceRole,		required=False 	) '''   #FAZER FIXO !!!!!!
+
+
 ################################################################################             
 #                  Methods                                                    #
 ################################################################################
 
-	def create_mgmt_vlan (self, site, sitetenant):
-		try:
-			vlan = VLAN.objects.get (site = site, vid = 100)
-				
+	def setup_firewall(self, site, sitetenant, devicesname, firewallmodel, devicestatus):
 			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
-			#pfx.prefix[2] #sw 
+			fw_name = devicesname + 'FWP00' 
+
+			try: 
+				fw = Device.obejects.get (name = fw_name)
+				self.log_info ("Device %s already present, carryng on." % fw_name)
+
+				return fw
+			except Device.DoesNotExist:
+				pass
+			
+			fw = Device(
+				site = site,
+				tenant = sitetenant,
+				name = fw_name,
+				device_type = fwmodel,
+				status = devicestatus,
+				device_role = 'firewall'
+				
+			)
+			fw.save()
+			self.log_success('Created device %s' % fw)
 
 
-			self.log_info ("Vlan %s already present, carrying on." % pfx.prefix[2])
+
+	def setup_switch(self, site, sitetenant, devicesname, coremodel, devicestatus):
+			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
+			sw_name = devicesname + 'CRP00'
+
+			try: 
+				sw = Device.obejects.get (name = sw_name)
+				self.log_info ("Device %s already present, carryng on." % sw_name)
+
+				return sw
+			except Device.DoesNotExist:
+				pass
+			
+			sw = Device(
+				site = site,
+				tenant = sitetenant,
+				name = sw_name,
+				device_type = coremodel,
+				status = devicestatus,
+				device_role = 'core-switch'
+				
+			)
+			sw.save()
+			self.log_success('Created device %s' % sw)
 
 
-			return vlan
-		except VLAN.DoesNotExist:
-			pass
-		
-		self.log_success ("Created VLAN %s" % vlan)
 
-		return vlan
+	def setup_cam(self, site, sitetenant, devicesname, cammodel, devicestatus):
+			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
+			cam_name = devicesname + 'CCAM00'
 
+			try: 
+				cam = Device.obejects.get (name = cam_name)
+				self.log_info ("Device %s already present, carryng on." % cam_name)
+
+				return cam
+			except Device.DoesNotExist:
+				pass 
+			
+			cam = Device(
+				site = site,
+				tenant = sitetenant,
+				name = cam_name,
+				device_type = cammodel,
+				status = devicestatus,
+				device_role = 'core-switch'
+				
+			)
+			cam.save()
+			self.log_success('Created device %s' % cam)
+
+
+
+	def setup_iap(self, site, sitetenant, devicesname, iapmodel, devicestatus):
+			pfx = Prefix.objects.get(site = site, vlan__vid=20) 
+			iap_name = devicesname + 'CTP001'
+
+			try: 
+				iap = Device.obejects.get (name = iap_name)
+				self.log_info ("Device %s already present, carryng on." % iap_name)
+
+				return iap
+			except Device.DoesNotExist:
+				pass
+			
+			iap = Device(
+				site = site,
+				tenant = sitetenant,
+				name = iap_name,
+				device_type = iapmodel,
+				status = devicestatus,
+				device_role = 'controller'
+				
+			)
+			iap.save()
+			self.log_success('Created device %s' % iap)
+
+	
+	
 	def run (self, data, commit):
 		site = data['site']
 		sitetenant = data['site_tenant']
-
+		devicesname = data['devices_name']
+		firewallmodel = data['firewall_model']
+		coremodel = data['core_model']
+		cammodel = data['cam_model']
+		iapmodel = data['iap_model']
+		devicestatus = data['device_status']
 		# Set up POP Mgmt VLAN
 		#for i in range(0, 11):
 		#	vlanrange = vlan_range[i]
 		#	desc = vdescription[i]
-		vlan = self.create_mgmt_vlan (site, sitetenant)
-		
+		fw = self.setup_firewall( site, sitetenant, devicesname, firewallmodel, devicestatus)
+		sw = self.setup_switch( site, sitetenant, devicesname, coremodel, devicestatus)
+		cam = self.setup_cam( site, sitetenant, devicesname, cammodel, devicestatus)
+		iap = self.setup_iap( site, sitetenant, devicesname, iapmodel, devicestatus)
 
 
 
 
+# criar devices
+# inserir ip nos devices
+# cabear devices
+# criar chassis
+#
+
+# Gerar output para criar arquivos????
+# SCRIPT PARA WAN?????
 
 
 '''addr = addr.split('/')
