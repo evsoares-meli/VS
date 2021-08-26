@@ -122,13 +122,14 @@ class ProvisionMDevices (Script):
 			fw_interface = Interface.objects.get (device = fw, name = 'dmz')
 
 			#set up mgmt IP
-			sw_mgmt_ip = IPAddress (
+			fw_mgmt_ip = IPAddress (
 				address = fwip,
 				interface = fw_interface
 			)
-			sw_mgmt_ip.save ()
-
-
+			fw_mgmt_ip.save ()
+			fw.primary_ip4 = fw_mgmt_ip
+			fw.save()
+			self.log_success ("Configured %s on interface %s of %s" % (fw_mgmt_ip, fw_interface, fw))
 
 			return fw
 
