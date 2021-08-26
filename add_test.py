@@ -117,7 +117,7 @@ class ProvisionMDevices (Script):
 				
 			)
 			fw.save()
-			self.log_success('Created device %s' % fw)
+			self.log_success('Created device %s' % fwip)
 			
 			#set up mgmt IP
 			fw_mgmt_ip = IPAddress (
