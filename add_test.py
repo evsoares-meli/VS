@@ -62,7 +62,7 @@ class ProvisionMDevices (Script):
 	)
 	cam_manufacturer = ObjectVar(
 		model=Manufacturer,
-		default='2',	#change to production id
+		default='23',	#change to production id
 		required=False 
 	)
 
@@ -166,7 +166,7 @@ class ProvisionMDevices (Script):
 				name = cam_name,
 				device_type = cammodel,
 				status = devicestatus,
-				device_role = DeviceRole.objects.get (name = 'Core Switch')
+				device_role = DeviceRole.objects.get (name = 'Core Cameras')
 				
 			)
 			cam.save()
