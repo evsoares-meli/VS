@@ -99,7 +99,7 @@ class ProvisionMDevices (Script):
 			fw_name = devicesname + 'FWP00' 
 
 			try: 
-				fw = Device.obejects.get (name = fw_name)
+				fw = Device.objects.get (name = fw_name)
 				self.log_info ("Device %s already present, carryng on." % fw_name)
 
 				return fw
@@ -126,7 +126,7 @@ class ProvisionMDevices (Script):
 			sw_name = devicesname + 'CRP00'
 
 			try: 
-				sw = Device.obejects.get (name = sw_name)
+				sw = Device.objects.get (name = sw_name)
 				self.log_info ("Device %s already present, carryng on." % sw_name)
 
 				return sw
@@ -153,7 +153,7 @@ class ProvisionMDevices (Script):
 			cam_name = devicesname + 'CCAM00'
 
 			try: 
-				cam = Device.obejects.get (name = cam_name)
+				cam = Device.objects.get (name = cam_name)
 				self.log_info ("Device %s already present, carryng on." % cam_name)
 
 				return cam
@@ -180,7 +180,7 @@ class ProvisionMDevices (Script):
 			iap_name = devicesname + 'CTP001'
 
 			try: 
-				iap = Device.obejects.get (name = iap_name)
+				iap = Device.objects.get (name = iap_name)
 				self.log_info ("Device %s already present, carryng on." % iap_name)
 
 				return iap
