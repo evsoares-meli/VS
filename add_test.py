@@ -122,7 +122,7 @@ class ProvisionMDevices (Script):
 			#set up mgmt IP
 			sw_mgmt_ip = IPAddress (
 			address = fwip,
-			interface = Interface.objects.get (device = fw, name = 'DMZ')
+			interface = Interface.objects.get (device = fw, name = 'dmz')
 			)
 			sw_mgmt_ip.save ()
 
