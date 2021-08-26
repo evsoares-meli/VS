@@ -117,12 +117,19 @@ class ProvisionMDevices (Script):
 				
 			)
 			fw.save()
-			self.log_success('Created device %s' % fwip)
+			self.log_success('Created device %s' % fw)
 			
 			#set up mgmt IP
+			fw_mgmt_iface = Interface (
+				device = fw,
+				name = "vlan100",
+				type = InterfaceTypeChoices.TYPE_VIRTUAL,
+			)
+			fw_mgmt_iface.save ()
+
 			fw_mgmt_ip = IPAddress (
-				address = fwip,
-				interface = Interface.objects.get (device = fw, name = 'dmz')
+				interface = Interface.objects.get (device = fw, name = 'dmz'),
+				address = fwip
 			)
 			fw_mgmt_ip.save ()
 			fw.primary_ip4 = fw_mgmt_ip
