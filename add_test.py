@@ -2,7 +2,7 @@ from django.utils.text import slugify
 
 from dcim.choices import *
 from dcim.models import Cable, Device, DeviceRole, DeviceType, Platform, Rack, RackRole, Site, Manufacturer
-#from dcim.models.device_components import FrontPort, Interface, RearPort
+from dcim.models.device_components import FrontPort, Interface, RearPort
 from tenancy.models import TenantGroup, Tenant
 from ipam.choices import *
 from ipam.models import IPAddress, Prefix, Role, VLAN, VLANGroup
@@ -117,6 +117,16 @@ class ProvisionMDevices (Script):
 			)
 			fw.save()
 			self.log_success('Created device %s' % fw)
+
+			#set up mgmt IP
+			sw_mgmt_ip = IPAddress (
+			address = pfx[10],
+			interface = Interface.objects.get (device = fw, name = 'DMZ')
+			)
+			sw_mgmt_ip.save ()
+
+
+
 			return fw
 
 
