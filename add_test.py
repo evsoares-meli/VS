@@ -110,7 +110,7 @@ class ProvisionMDevices (Script):
 				site = site,
 				tenant = sitetenant,
 				name = fw_name,
-				device_type = fwmodel,
+				device_type = firewallmodel,
 				status = devicestatus,
 				device_role = 'firewall'
 				
