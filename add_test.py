@@ -120,15 +120,14 @@ class ProvisionMDevices (Script):
 			self.log_success('Created device %s' % fw)
 			
 			#set up mgmt IP
-			
+			interface = Interface.objects.get (device = fw, name = 'dmz'),
 			fw_mgmt_ip = IPAddress (
-				interface = Interface.objects.get (device = fw, name = 'dmz'),
 				address = fwip
 			)
-			fw_mgmt_ip.set()
+			interface.set(fw_mgmt_ip)
 			fw.primary_ip4 = fw_mgmt_ip
 			fw.save()
-			self.log_success ("Configured %s on interface %s of %s" % (fw_mgmt_ip, fw_mgmt_ip.interface, fw))
+			self.log_success ("Configured %s on interface of %s" % (fw_mgmt_ip, fw))
 
 			return fw
 
