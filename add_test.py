@@ -96,7 +96,7 @@ class ProvisionMDevices (Script):
 
 	def setup_firewall(self, site, sitetenant, devicesname, firewallmodel, devicestatus):
 			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
-			fwip = pfx.prefix[10]
+			fwip = pfx.prefix[10] + '/28'
 			fw_name = devicesname + 'FWP00' 
 
 			try: 
