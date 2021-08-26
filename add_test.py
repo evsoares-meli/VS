@@ -96,6 +96,7 @@ class ProvisionMDevices (Script):
 
 	def setup_firewall(self, site, sitetenant, devicesname, firewallmodel, devicestatus):
 			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
+			fwip = pfx.prefix[10]
 			fw_name = devicesname + 'FWP00' 
 
 			try: 
@@ -120,7 +121,7 @@ class ProvisionMDevices (Script):
 
 			#set up mgmt IP
 			sw_mgmt_ip = IPAddress (
-			address = pfx[10],
+			address = fwip,
 			interface = Interface.objects.get (device = fw, name = 'DMZ')
 			)
 			sw_mgmt_ip.save ()
