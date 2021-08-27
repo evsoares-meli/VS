@@ -120,16 +120,14 @@ class ProvisionMDevices (Script):
 			self.log_success('Created device %s' % fw)
 			
 			#set up mgmt IP
-			iface = Interface.objects.get (device = fw, name = 'dmz')
-			fw_mgmt_ip = IPAddress (
-				address = fwip,
-			)
+			fw_iface = Interface.objects.get (device = fw, name = 'dmz')
+			fw_mgmt_ip = IPAddress (address = fwip)
 			fw_mgmt_ip.save ()
-			fw_mgmt_ip.assigned_object = iface
+			fw_mgmt_ip.assigned_object = fw_iface
 			fw_mgmt_ip.save ()
 			fw.primary_ip4 = fw_mgmt_ip
 			fw.save()
-			self.log_success ("Configured %s on interface %s of %s" % (fw_mgmt_ip, iface, fw))
+			self.log_success ("Configured %s on interface %s of %s" % (fw_mgmt_ip, fw_iface, fw))
 
 			return fw
 
@@ -137,6 +135,7 @@ class ProvisionMDevices (Script):
 
 	def setup_switch(self, site, sitetenant, devicesname, coremodel, devicestatus):
 			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
+			swip = pfx.prefix[2]
 			sw_name = devicesname + 'CRP00'
 
 			try: 
@@ -158,12 +157,23 @@ class ProvisionMDevices (Script):
 			)
 			sw.save()
 			self.log_success('Created device %s' % sw)
+
+			#set up mgmt IP
+			sw_iface = Interface.objects.get (device = sw, name = 'vlan100')
+			sw_mgmt_ip = IPAddress (address = swip)
+			sw_mgmt_ip.save ()
+			sw_mgmt_ip.assigned_object = sw_iface
+			sw_mgmt_ip.save ()
+			sw.primary_ip4 = sw_mgmt_ip
+			sw.save()
+			self.log_success ("Configured %s on interface %s of %s" % (sw_mgmt_ip, sw_iface, sw))
 			return sw
 
 
 
 	def setup_cam(self, site, sitetenant, devicesname, cammodel, devicestatus):
 			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
+			camip = pfx.prefix[5]
 			cam_name = devicesname + 'CCAM00'
 
 			try: 
@@ -185,12 +195,23 @@ class ProvisionMDevices (Script):
 			)
 			cam.save()
 			self.log_success('Created device %s' % cam)
+
+			#set up mgmt IP
+			cam_iface = Interface.objects.get (device = cam, name = 'vlan100')
+			cam_mgmt_ip = IPAddress (address = camip)
+			cam_mgmt_ip.save ()
+			cam_mgmt_ip.assigned_object = cam_iface
+			cam_mgmt_ip.save ()
+			cam.primary_ip4 = cam_mgmt_ip
+			cam.save()
+			self.log_success ("Configured %s on interface %s of %s" % (cam_mgmt_ip, cam_iface, cam))
 			return cam
 
 
 
 	def setup_iap(self, site, sitetenant, devicesname, iapmodel, devicestatus):
 			pfx = Prefix.objects.get(site = site, vlan__vid=20) 
+			iapip = pfx.prefix[2]
 			iap_name = devicesname + 'CTP001'
 
 			try: 
@@ -212,6 +233,15 @@ class ProvisionMDevices (Script):
 			)
 			iap.save()
 			self.log_success('Created device %s' % iap)
+			#set up mgmt IP
+			iap_iface = Interface.objects.get (device = iap, name = 'vlan20')
+			iap_mgmt_ip = IPAddress (address = iapip)
+			iap_mgmt_ip.save ()
+			iap_mgmt_ip.assigned_object = iap_iface
+			iap_mgmt_ip.save ()
+			iap.primary_ip4 = iap_mgmt_ip
+			iap.save()
+			self.log_success ("Configured %s on interface %s of %s" % (iap_mgmt_ip, iap_iface, iap))
 			return iap
 
 	
