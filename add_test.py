@@ -293,7 +293,7 @@ class ProvisionMDevices (Script):
 		#for i in range(0, 11):
 		#	vlanrange = vlan_range[i]
 		#	desc = vdescription[i]
-		rack = self.create_rack(self,site)
+		rack = self.create_rack(site)
 		fw = self.setup_firewall( site, sitetenant, devicesname, firewallmodel, devicestatus)
 		sw = self.setup_switch( site, sitetenant, devicesname, coremodel, devicestatus)
 		cam = self.setup_cam( site, sitetenant, devicesname, cammodel, devicestatus)
