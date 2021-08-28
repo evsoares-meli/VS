@@ -144,6 +144,7 @@ class ProvisionMDevices (Script):
 			)
 			fw.save()
 			self.log_success('Created device %s' % fw)
+			self.log_success('Setup device on position %s of Rack %s' % fw.position, rack )
 			
 			#set up mgmt IP
 			fw_iface = Interface.objects.get (device = fw, name = 'dmz')
