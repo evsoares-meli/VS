@@ -323,6 +323,7 @@ class ProvisionMDevices (Script):
 				cable = Cable (
 					termination_a = Interface.objects.get (device = sw, name = 'G1/0/3'),
 					termination_b = Interface.objects.get (device = iap, name = 'G1/0/1'),
+					color = '3f51b5',
 					status = CableStatusChoices.STATUS_PLANNED
 				)
 				cable.save ()
@@ -368,3 +369,7 @@ class ProvisionMDevices (Script):
 # Gerar output para criar arquivos????
 # SCRIPT PARA WAN?????
 #SCRIPT PARA POR EM ACTIVE!!
+
+
+#colors
+# UTP - Indigo - 3f51b5
