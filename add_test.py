@@ -116,7 +116,7 @@ class ProvisionMDevices (Script):
 		return rack
 
 
-	def setup_firewall(self, site, sitetenant, devicesname, firewallmodel, devicestatus):
+	def setup_firewall(self, site, rack, sitetenant, devicesname, firewallmodel, devicestatus):
 			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
 			fwip = pfx.prefix[10]
 			fw_name = devicesname + 'FWP001-1' 
@@ -135,7 +135,10 @@ class ProvisionMDevices (Script):
 				name = fw_name,
 				device_type = firewallmodel,
 				status = devicestatus,
-				device_role = DeviceRole.objects.get (name = 'Firewall')
+				device_role = DeviceRole.objects.get (name = 'Firewall'),
+				rack = rack,
+				position = rack.u_height - 5,
+				face = DeviceFaceChoices.FACE_FRONT
 				
 			)
 			fw.save()
@@ -294,7 +297,7 @@ class ProvisionMDevices (Script):
 		#	vlanrange = vlan_range[i]
 		#	desc = vdescription[i]
 		rack = self.create_rack(site)
-		fw = self.setup_firewall( site, sitetenant, devicesname, firewallmodel, devicestatus)
+		fw = self.setup_firewall( site, rack, sitetenant, devicesname, firewallmodel, devicestatus)
 		sw = self.setup_switch( site, sitetenant, devicesname, coremodel, devicestatus)
 		cam = self.setup_cam( site, sitetenant, devicesname, cammodel, devicestatus)
 		iap = self.setup_iap( site, sitetenant, devicesname, iapmodel, devicestatus)
