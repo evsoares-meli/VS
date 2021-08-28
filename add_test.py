@@ -322,7 +322,7 @@ class ProvisionMDevices (Script):
 					self.log_info ("Ip %s is already in use for another interface" % (iap_mgmt_ip))
 				cable = Cable (
 					termination_a = Interface.objects.get (device = sw, name = 'G1/0/3'),
-					termination_b = FrontPort.objects.get (device = iap, name = 'vlan20'),
+					termination_b = FrontPort.objects.get (device = iap, name = 'G1/0/1'),
 					status = CableStatusChoices.STATUS_PLANNED
 				)
 				cable.save ()
