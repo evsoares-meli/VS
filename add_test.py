@@ -259,7 +259,7 @@ class ProvisionMDevices (Script):
 				cam_mgmt_ip = IPAddress (address = camip)
 				cam_mgmt_ip.save ()
 			finally:
-				if cam_mgmt_ip.assigned_object in None:
+				if cam_mgmt_ip.assigned_object is None:
 					cam_mgmt_ip.assigned_object = cam_iface
 					cam_mgmt_ip.save ()
 					cam.primary_ip4 = cam_mgmt_ip
