@@ -272,7 +272,7 @@ class ProvisionMDevices (Script):
 
 
 
-	def setup_iap(self, site, rack, sitetenant, devicesname, iapmodel, devicestatus):
+	def setup_iap(self, site, rack, sitetenant, devicesname, iapmodel, devicestatus, sw):
 			pfx = Prefix.objects.get(site = site, vlan__vid=20) 
 			iapip = pfx.prefix[2]
 			iap_name = devicesname + 'CTP001'
@@ -320,6 +320,14 @@ class ProvisionMDevices (Script):
 					self.log_success ("Configured %s on interface %s of %s" % (iap_mgmt_ip, iap_iface, iap))
 				else:
 					self.log_info ("Ip %s is already in use for another interface" % (iap_mgmt_ip))
+				cable = Cable (
+					termination_a = Interface.objects.get (device = sw, name = 'G1/0/3'),
+					termination_b = FrontPort.objects.get (device = iap, name = 'vlan20'),
+					status = CableStatusChoices.STATUS_PLANNED
+				)
+				cable.save ()
+
+
 				return iap
 
 	
@@ -338,7 +346,7 @@ class ProvisionMDevices (Script):
 		fw = self.setup_firewall( site, rack, sitetenant, devicesname, firewallmodel, devicestatus)
 		sw = self.setup_switch( site, rack, sitetenant, devicesname, coremodel, devicestatus)
 		cam = self.setup_cam( site, rack, sitetenant, devicesname, cammodel, devicestatus)
-		iap = self.setup_iap( site, rack, sitetenant, devicesname, iapmodel, devicestatus)
+		iap = self.setup_iap( site, rack, sitetenant, devicesname, iapmodel, devicestatus, sw)
 
 
 
@@ -346,15 +354,17 @@ class ProvisionMDevices (Script):
 # criar devices OK
 # 		criar devices secundarios
 #			criar chassis
+#				cabear devices
 
 # inserir ip nos devices OK
 
 # criar rack ok
 #	inserir devices no rack ok
 
-# cabear devices
+# 
 # 
 #
 
 # Gerar output para criar arquivos????
 # SCRIPT PARA WAN?????
+#SCRIPT PARA POR EM ACTIVE!!
