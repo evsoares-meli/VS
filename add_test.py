@@ -125,22 +125,23 @@ class ProvisionMDevices (Script):
 			try:
 				fw_mgmt_ip = IPAddress.objects.get (address = fwip)
 				self.log_info("Ip %s already present, carryng on" % fwip)
-				return fw_mgmt_ip
+			
 			except IPAddress.DoesNotExist:
 				pass
 			fw_mgmt_ip = IPAddress (address = fwip)
 			fw_mgmt_ip.save ()
 			
-			if fw_mgmt_ip.assigned_object is None:
-				fw_mgmt_ip.assigned_object = fw_iface
-				fw_mgmt_ip.save ()
-				fw.primary_ip4 = fw_mgmt_ip
-				fw.save()
-				self.log_success ("Configured %s on interface %s of %s" % (fw_mgmt_ip, fw_iface, fw))
-			else:
-				self.log_info ("Ip %s is already in use for another interface" % (fw_mgmt_ip))
+			finally:
+				if fw_mgmt_ip.assigned_object is None:
+					fw_mgmt_ip.assigned_object = fw_iface
+					fw_mgmt_ip.save ()
+					fw.primary_ip4 = fw_mgmt_ip
+					fw.save()
+					self.log_success ("Configured %s on interface %s of %s" % (fw_mgmt_ip, fw_iface, fw))
+				else:
+					self.log_info ("Ip %s is already in use for another interface" % (fw_mgmt_ip))
 
-			return fw
+				return fw
 
 
 
