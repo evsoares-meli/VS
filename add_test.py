@@ -127,9 +127,9 @@ class ProvisionMDevices (Script):
 				self.log_info("Ip %s already present, carryng on" % fwip)
 			
 			except IPAddress.DoesNotExist:
-				pass
-			fw_mgmt_ip = IPAddress (address = fwip)
-			fw_mgmt_ip.save ()
+				
+				fw_mgmt_ip = IPAddress (address = fwip)
+				fw_mgmt_ip.save ()
 			
 			finally:
 				if fw_mgmt_ip.assigned_object is None:
