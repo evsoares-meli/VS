@@ -1,3 +1,4 @@
+from typing_extensions import final
 from django.utils.text import slugify
 
 from dcim.choices import *
@@ -152,7 +153,6 @@ class ProvisionMDevices (Script):
 				self.log_info("Ip %s already present, carryng on" % fwip)
 			
 			except IPAddress.DoesNotExist:
-				
 				fw_mgmt_ip = IPAddress (address = fwip)
 				fw_mgmt_ip.save ()
 			
@@ -170,7 +170,7 @@ class ProvisionMDevices (Script):
 
 
 
-	def setup_switch(self, site, sitetenant, devicesname, coremodel, devicestatus):
+	def setup_switch(self, site, rack, sitetenant, devicesname, coremodel, devicestatus):
 			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
 			swip = pfx.prefix[2]
 			sw_name = devicesname + 'CRP001-1'
@@ -189,7 +189,10 @@ class ProvisionMDevices (Script):
 				name = sw_name,
 				device_type = coremodel,
 				status = devicestatus,
-				device_role = DeviceRole.objects.get (name = 'Core Switch')
+				device_role = DeviceRole.objects.get (name = 'Core Switch'),
+				rack = rack,
+				position = rack.u_height - 7,
+				face = DeviceFaceChoices.FACE_FRONT
 				
 			)
 			sw.save()
@@ -197,18 +200,28 @@ class ProvisionMDevices (Script):
 
 			#set up mgmt IP
 			sw_iface = Interface.objects.get (device = sw, name = 'vlan100')
-			sw_mgmt_ip = IPAddress (address = swip)
-			sw_mgmt_ip.save ()
-			sw_mgmt_ip.assigned_object = sw_iface
-			sw_mgmt_ip.save ()
-			sw.primary_ip4 = sw_mgmt_ip
-			sw.save()
-			self.log_success ("Configured %s on interface %s of %s" % (sw_mgmt_ip, sw_iface, sw))
-			return sw
+			try:
+				sw_iface = IPAddress.objects.get (address = swip)
+				self.log_info("Ip %s already present, carryng on" % swip)
+
+			except IPAddress.DoesNotExist:
+				sw_mgmt_ip = IPAddress (address = swip)
+				sw_mgmt_ip.save ()
+			finally:
+				if sw_mgmt_ip.assigned_object is None: 
+					sw_mgmt_ip.assigned_object = sw_iface
+					sw_mgmt_ip.save ()
+					sw.primary_ip4 = sw_mgmt_ip
+					sw.save()
+					self.log_success ("Configured %s on interface %s of %s" % (sw_mgmt_ip, sw_iface, sw))
+				else:
+					self.log_info ("Ip %s is already in use for another interface" % (sw_mgmt_ip))
+
+				return sw
 
 
 
-	def setup_cam(self, site, sitetenant, devicesname, cammodel, devicestatus):
+	def setup_cam(self, site, rack, sitetenant, devicesname, cammodel, devicestatus):
 			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
 			camip = pfx.prefix[5]
 			cam_name = devicesname + 'CCAM001-1'
@@ -227,7 +240,10 @@ class ProvisionMDevices (Script):
 				name = cam_name,
 				device_type = cammodel,
 				status = devicestatus,
-				device_role = DeviceRole.objects.get (name = 'Core Cameras')
+				device_role = DeviceRole.objects.get (name = 'Core Cameras'),
+				rack = rack,
+				position = rack.u_height - 9,
+				face = DeviceFaceChoices.FACE_FRONT
 				
 			)
 			cam.save()
@@ -235,18 +251,28 @@ class ProvisionMDevices (Script):
 
 			#set up mgmt IP
 			cam_iface = Interface.objects.get (device = cam, name = 'vlan100')
-			cam_mgmt_ip = IPAddress (address = camip)
-			cam_mgmt_ip.save ()
-			cam_mgmt_ip.assigned_object = cam_iface
-			cam_mgmt_ip.save ()
-			cam.primary_ip4 = cam_mgmt_ip
-			cam.save()
-			self.log_success ("Configured %s on interface %s of %s" % (cam_mgmt_ip, cam_iface, cam))
-			return cam
+
+			try:
+				cam_mgmt_ip = IPAddress.objects.get (address = camip)
+				self.log_info("Ip %s already present, carryng on" % camip)
+			except IPAddress.DoesNotExist:
+				cam_mgmt_ip = IPAddress (address = camip)
+				cam_mgmt_ip.save ()
+			finally:
+				if cam_mgmt_ip.assigned_object in None:
+					cam_mgmt_ip.assigned_object = cam_iface
+					cam_mgmt_ip.save ()
+					cam.primary_ip4 = cam_mgmt_ip
+					cam.save()
+					self.log_success ("Configured %s on interface %s of %s" % (cam_mgmt_ip, cam_iface, cam))
+				else:
+					self.log_info ("Ip %s is already in use for another interface" % (cam_mgmt_ip))
+									
+				return cam
 
 
 
-	def setup_iap(self, site, sitetenant, devicesname, iapmodel, devicestatus):
+	def setup_iap(self, site, rack, sitetenant, devicesname, iapmodel, devicestatus):
 			pfx = Prefix.objects.get(site = site, vlan__vid=20) 
 			iapip = pfx.prefix[2]
 			iap_name = devicesname + 'CTP001'
@@ -265,21 +291,36 @@ class ProvisionMDevices (Script):
 				name = iap_name,
 				device_type = iapmodel,
 				status = devicestatus,
-				device_role = DeviceRole.objects.get (name = 'Controller')
+				device_role = DeviceRole.objects.get (name = 'Controller'),
+				rack = rack,
+				#position = rack.u_height - 5,
+				face = DeviceFaceChoices.FACE_FRONT
 				
 			)
 			iap.save()
 			self.log_success('Created device %s' % iap)
+			
 			#set up mgmt IP
 			iap_iface = Interface.objects.get (device = iap, name = 'vlan20')
-			iap_mgmt_ip = IPAddress (address = iapip)
-			iap_mgmt_ip.save ()
-			iap_mgmt_ip.assigned_object = iap_iface
-			iap_mgmt_ip.save ()
-			iap.primary_ip4 = iap_mgmt_ip
-			iap.save()
-			self.log_success ("Configured %s on interface %s of %s" % (iap_mgmt_ip, iap_iface, iap))
-			return iap
+			
+			try:
+				iap_mgmt_ip = IPAddress.objects.get (address = iapip)
+				self.log_info("Ip %s already present, carryng on" % iapip)
+
+			except IPAddress.DoesNotExist:
+				iap_mgmt_ip = IPAddress (address = iapip)
+				iap_mgmt_ip.save ()
+
+			finally:
+				if iap_mgmt_ip.assigned_object is None:
+					iap_mgmt_ip.assigned_object = iap_iface
+					iap_mgmt_ip.save ()
+					iap.primary_ip4 = iap_mgmt_ip
+					iap.save()
+					self.log_success ("Configured %s on interface %s of %s" % (iap_mgmt_ip, iap_iface, iap))
+				else:
+					self.log_info ("Ip %s is already in use for another interface" % (iap_mgmt_ip))
+				return iap
 
 	
 	
@@ -292,35 +333,28 @@ class ProvisionMDevices (Script):
 		cammodel = data['cam_model']
 		iapmodel = data['iap_model']
 		devicestatus = data['device_status']
-		# Set up POP Mgmt VLAN
-		#for i in range(0, 11):
-		#	vlanrange = vlan_range[i]
-		#	desc = vdescription[i]
+
 		rack = self.create_rack(site)
 		fw = self.setup_firewall( site, rack, sitetenant, devicesname, firewallmodel, devicestatus)
-		sw = self.setup_switch( site, sitetenant, devicesname, coremodel, devicestatus)
-		cam = self.setup_cam( site, sitetenant, devicesname, cammodel, devicestatus)
-		iap = self.setup_iap( site, sitetenant, devicesname, iapmodel, devicestatus)
+		sw = self.setup_switch( site, rack, sitetenant, devicesname, coremodel, devicestatus)
+		cam = self.setup_cam( site, rack, sitetenant, devicesname, cammodel, devicestatus)
+		iap = self.setup_iap( site, rack, sitetenant, devicesname, iapmodel, devicestatus)
 
 
 
 
 # criar devices OK
 # 		criar devices secundarios
+#			criar chassis
+
 # inserir ip nos devices OK
-# criar rack
-#	inserir devices no rack
+
+# criar rack ok
+#	inserir devices no rack ok
+
 # cabear devices
-# criar chassis
+# 
 #
 
 # Gerar output para criar arquivos????
 # SCRIPT PARA WAN?????
-
-
-'''addr = addr.split('/')
-ip = addr[0]
-mask = addr[1]
-octet = ip.split('.')
-ipsw = '{}.{}.{}.2/{}'.format(octet[0],octet[1],octet[2],mask)
-'''
