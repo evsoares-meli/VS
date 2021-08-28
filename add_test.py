@@ -93,11 +93,33 @@ class ProvisionMDevices (Script):
 ################################################################################             
 #                  Methods                                                    #
 ################################################################################
+	def create_rack (self, site):
+		rname = 'Rack {} - CPD'.format(site)
+		try:
+			rack = Rack.objects.get (name = rname)
+			self.log_info ("Rack %s already present, carrying on." % rack)
+			return rack
+		except Rack.DoesNotExist:
+			pass
+
+		rack = Rack (
+			role = RackRole.objects.get (name = 'cpd'),
+			width = RackWidthChoices.WIDTH_19IN,
+			u_height = 42,
+			status = RackStatusChoices.STATUS_PLANNED,
+			name = rname,
+			site = site
+		)
+
+		rack.save ()
+		self.log_success ("Created rack {}".format (rack))
+		return rack
+
 
 	def setup_firewall(self, site, sitetenant, devicesname, firewallmodel, devicestatus):
 			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
 			fwip = pfx.prefix[10]
-			fw_name = devicesname + 'FWP001-' 
+			fw_name = devicesname + 'FWP001-1' 
 
 			try: 
 				fw = Device.objects.get (name = fw_name)
@@ -148,7 +170,7 @@ class ProvisionMDevices (Script):
 	def setup_switch(self, site, sitetenant, devicesname, coremodel, devicestatus):
 			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
 			swip = pfx.prefix[2]
-			sw_name = devicesname + 'CRP001-'
+			sw_name = devicesname + 'CRP001-1'
 
 			try: 
 				sw = Device.objects.get (name = sw_name)
@@ -186,7 +208,7 @@ class ProvisionMDevices (Script):
 	def setup_cam(self, site, sitetenant, devicesname, cammodel, devicestatus):
 			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
 			camip = pfx.prefix[5]
-			cam_name = devicesname + 'CCAM001-'
+			cam_name = devicesname + 'CCAM001-1'
 
 			try: 
 				cam = Device.objects.get (name = cam_name)
@@ -271,6 +293,7 @@ class ProvisionMDevices (Script):
 		#for i in range(0, 11):
 		#	vlanrange = vlan_range[i]
 		#	desc = vdescription[i]
+		rack = self.create_rack(self,site)
 		fw = self.setup_firewall( site, sitetenant, devicesname, firewallmodel, devicestatus)
 		sw = self.setup_switch( site, sitetenant, devicesname, coremodel, devicestatus)
 		cam = self.setup_cam( site, sitetenant, devicesname, cammodel, devicestatus)
@@ -283,6 +306,7 @@ class ProvisionMDevices (Script):
 # 		criar devices secundarios
 # inserir ip nos devices OK
 # criar rack
+#	inserir devices no rack
 # cabear devices
 # criar chassis
 #
