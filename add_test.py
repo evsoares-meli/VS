@@ -103,7 +103,7 @@ class ProvisionMDevices (Script):
 			pass
 
 		rack = Rack (
-			role = RackRole.objects.get (name = 'cpd'),
+			role = RackRole.objects.get (name = 'CPD'),
 			width = RackWidthChoices.WIDTH_19IN,
 			u_height = 42,
 			status = RackStatusChoices.STATUS_PLANNED,
