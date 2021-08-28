@@ -94,7 +94,7 @@ class ProvisionMDevices (Script):
 #                  Methods                                                    #
 ################################################################################
 	def create_rack (self, site):
-		rname = 'Rack {} - CPD'.format(site)
+		rname = '{} - CPD'.format(site)
 		try:
 			rack = Rack.objects.get (name = rname)
 			self.log_info ("Rack %s already present, carrying on." % rack)
