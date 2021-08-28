@@ -97,7 +97,7 @@ class ProvisionMDevices (Script):
 	def setup_firewall(self, site, sitetenant, devicesname, firewallmodel, devicestatus):
 			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
 			fwip = pfx.prefix[10]
-			fw_name = devicesname + 'FWP00' 
+			fw_name = devicesname + 'FWP001-' 
 
 			try: 
 				fw = Device.objects.get (name = fw_name)
@@ -121,13 +121,24 @@ class ProvisionMDevices (Script):
 			
 			#set up mgmt IP
 			fw_iface = Interface.objects.get (device = fw, name = 'dmz')
+			
+			try:
+				fw_mgmt_ip = IPAddress.objects.get (address = fwip)
+				self.log_info("Ip %s already present, carryng on" % fwip)
+				return fw_mgmt_ip
+			except IPAddress.DoesNotExist:
+				pass
 			fw_mgmt_ip = IPAddress (address = fwip)
 			fw_mgmt_ip.save ()
-			fw_mgmt_ip.assigned_object = fw_iface
-			fw_mgmt_ip.save ()
-			fw.primary_ip4 = fw_mgmt_ip
-			fw.save()
-			self.log_success ("Configured %s on interface %s of %s" % (fw_mgmt_ip, fw_iface, fw))
+			
+			if fw_mgmt_ip.assigned_object is None:
+				fw_mgmt_ip.assigned_object = fw_iface
+				fw_mgmt_ip.save ()
+				fw.primary_ip4 = fw_mgmt_ip
+				fw.save()
+				self.log_success ("Configured %s on interface %s of %s" % (fw_mgmt_ip, fw_iface, fw))
+			else:
+				self.log_info ("Ip %s is already in use for another interface" % (fw_mgmt_ip))
 
 			return fw
 
@@ -136,7 +147,7 @@ class ProvisionMDevices (Script):
 	def setup_switch(self, site, sitetenant, devicesname, coremodel, devicestatus):
 			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
 			swip = pfx.prefix[2]
-			sw_name = devicesname + 'CRP00'
+			sw_name = devicesname + 'CRP001-'
 
 			try: 
 				sw = Device.objects.get (name = sw_name)
@@ -174,7 +185,7 @@ class ProvisionMDevices (Script):
 	def setup_cam(self, site, sitetenant, devicesname, cammodel, devicestatus):
 			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
 			camip = pfx.prefix[5]
-			cam_name = devicesname + 'CCAM00'
+			cam_name = devicesname + 'CCAM001-'
 
 			try: 
 				cam = Device.objects.get (name = cam_name)
@@ -267,8 +278,10 @@ class ProvisionMDevices (Script):
 
 
 
-# criar devices
-# inserir ip nos devices
+# criar devices OK
+# 		criar devices secundarios
+# inserir ip nos devices OK
+# criar rack
 # cabear devices
 # criar chassis
 #
