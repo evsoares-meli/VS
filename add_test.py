@@ -182,17 +182,24 @@ class ProvisionMDevices (Script):
 					swip = pfx.prefix[2]
 					sw_name = devicesname + 'CRP001-' + box
 					role = DeviceRole.objects.get (name = 'Core Switch')
-					rack_u = rack.u_height - 7
+					if primary == 1:
+						rack_u = rack.u_height - 7
+					else:
+						rack_u = rack.u_height - 9
 				elif manufacturer.name == 'Ruckus':
 					swip = pfx.prefix[5]
 					sw_name = devicesname + 'CCAM001-' + box
 					role = DeviceRole.objects.get (name = 'Core Cameras')
-					rack_u = rack.u_height - 9
+					if primary == 1:
+						rack_u = rack.u_height - 11
+					else:
+						rack_u = rack.u_height - 13
 				elif manufacturer.name == 'Fortinet':
 					swip = pfx.prefix[10]
 					sw_name = devicesname + 'FWP001-' + box
 					role = DeviceRole.objects.get (name = 'Firewall')
-					rack_u = rack.u_height - 5
+					if primary == 1:
+						rack_u = rack.u_height - 5
 			elif manufacturer.name == 'Aruba': 
 				pfx = Prefix.objects.get(site = site, vlan__vid=20) 
 				vlanid = 'vlan20'
@@ -221,7 +228,7 @@ class ProvisionMDevices (Script):
 			)
 			sw.save()
 			self.log_success('Created device %s' % sw)
-			if manufacturer.name != 'Aruba':
+			if manufacturer.name != 'Aruba' or manufacturer.name == 'Fortinet' and primary != '2' :
 				sw.position = rack_u
 				sw.save()
 			
