@@ -380,11 +380,11 @@ class ProvisionMDevices (Script):
 		devicestatus = data['device_status']
 
 		rack = self.create_rack(site)
-		fw = self.setup_firewall( site, rack, sitetenant, devicesname, firewallmodel, devicestatus)
+		#fw = self.setup_firewall( site, rack, sitetenant, devicesname, firewallmodel, devicestatus)
 		sw = self.setup_device( site, rack, sitetenant, devicesname, coremodel, devicestatus, coremanufacturer, 1)
 		sw2 = self.setup_device( site, rack, sitetenant, devicesname, coremodel, devicestatus, coremanufacturer, 2)
-		cam = self.setup_cam( site, rack, sitetenant, devicesname, cammodel, devicestatus)
-		iap = self.setup_iap( site, rack, sitetenant, devicesname, iapmodel, devicestatus, sw)
+		#cam = self.setup_cam( site, rack, sitetenant, devicesname, cammodel, devicestatus)
+		#iap = self.setup_iap( site, rack, sitetenant, devicesname, iapmodel, devicestatus, sw)
 
 
 
