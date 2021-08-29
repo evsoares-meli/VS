@@ -126,46 +126,43 @@ class ProvisionMDevices (Script):
 				vlanid = 'vlan100'
 				if manufacturer.name == 'Fortinet':
 					vlanid = 'dmz'
-					swip = pfx.prefix[10]
-					sw_name = devicesname + 'FWP001-' + box
+					device_ip = pfx.prefix[10]
+					device_name = devicesname + 'FWP001-' + box
 					role = DeviceRole.objects.get (name = 'Firewall')
 					if primary == 1:
 						rack_u = rack.u_height - 10
 				elif manufacturer.name == 'Cisco':
-					swip = pfx.prefix[2]
-					sw_name = devicesname + 'CRP001-' + box
+					device_ip = pfx.prefix[2]
+					device_name = devicesname + 'CRP001-' + box
 					role = DeviceRole.objects.get (name = 'Core Switch')
 					if primary == 1:
 						rack_u = rack.u_height - 12
 					else:
 						rack_u = rack.u_height - 14
 				elif manufacturer.name == 'Ruckus':
-					swip = pfx.prefix[5]
-					sw_name = devicesname + 'CCAM001-' + box
+					device_ip = pfx.prefix[5]
+					device_name = devicesname + 'CCAM001-' + box
 					role = DeviceRole.objects.get (name = 'Core Cameras')
-					if primary == 1:
-						rack_u = rack.u_height - 16
-					else:
-						rack_u = rack.u_height - 18
+					rack_u = rack.u_height - 16
 			elif manufacturer.name == 'Aruba': 
 				pfx = Prefix.objects.get(site = site, vlan__vid=20) 
 				vlanid = 'vlan20'
-				swip = pfx.prefix[2]
-				sw_name = devicesname + 'CTP001'
+				device_ip = pfx.prefix[2]
+				device_name = devicesname + 'CTP001'
 				role = DeviceRole.objects.get (name = 'Controller')
 
 			try: 
-				sw = Device.objects.get (name = sw_name)
-				self.log_info ("Device %s already present, carryng on." % sw_name)
+				device = Device.objects.get (name = device_name)
+				self.log_info ("Device %s already present, carryng on." % device_name)
 
-				return sw
+				return device
 			except Device.DoesNotExist:
 				pass
 			
-			sw = Device(
+			device = Device(
 				site = site,
 				tenant = sitetenant,
-				name = sw_name,
+				name = device_name,
 				device_type = devicemodel,
 				status = devicestatus,
 				device_role = role,
@@ -173,34 +170,34 @@ class ProvisionMDevices (Script):
 				face = DeviceFaceChoices.FACE_FRONT
 				
 			)
-			sw.save()
-			self.log_success('Created device %s' % sw)
+			device.save()
+			self.log_success('Created device %s' % device)
 			try:
-				sw.position = rack_u
-				sw.save()
+				device.position = rack_u
+				device.save()
 			except:
 				pass
 			#set up mgmt IP
 			if primary == 1:
-				sw_iface = Interface.objects.get (device = sw, name = vlanid)
+				device_iface = Interface.objects.get (device = device, name = vlanid)
 				try:
-					sw_iface = IPAddress.objects.get (address = swip)
-					self.log_info("Ip %s already present, carryng on" % swip)
+					device_iface = IPAddress.objects.get (address = device_ip)
+					self.log_info("Ip %s already present, carryng on" % device_ip)
 
 				except IPAddress.DoesNotExist:
-					sw_mgmt_ip = IPAddress (address = swip)
-					sw_mgmt_ip.save ()
+					device_mgmt_ip = IPAddress (address = device_ip)
+					device_mgmt_ip.save ()
 				finally:
-					if sw_mgmt_ip.assigned_object is None: 
-						sw_mgmt_ip.assigned_object = sw_iface
-						sw_mgmt_ip.save ()
-						sw.primary_ip4 = sw_mgmt_ip
-						sw.save()
-						self.log_success ("Configured %s on interface %s of %s" % (sw_mgmt_ip, sw_iface, sw))
+					if device_mgmt_ip.assigned_object is None: 
+						device_mgmt_ip.assigned_object = device_iface
+						device_mgmt_ip.save ()
+						device.primary_ip4 = device_mgmt_ip
+						device.save()
+						self.log_success ("Configured %s on interface %s of %s" % (device_mgmt_ip, device_iface, device))
 					else:
-						self.log_info ("Ip %s is already in use for another interface" % (sw_mgmt_ip))
+						self.log_info ("Ip %s is already in use for another interface" % (device_mgmt_ip))
 
-			return sw
+			return device
 
 	def setup_cable(self, fw_1, fw_2,sw_1,sw_2,cam_1,ap_c):
 		
