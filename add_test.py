@@ -214,14 +214,15 @@ class ProvisionMDevices (Script):
 				status = CableStatusChoices.STATUS_PLANNED
 			)
 			cable.save ()
+			self.log_info ("added cable between %s interface %s and %s interface %s" % (device1,if1, device2,if2))
 		#device_cable(fw_1,fw_2,'port6','port6','607d8b','cat6','HA') 			#firewall HA1
 		#device_cable(fw_1,fw_2,'port7','port7','607d8b','cat6','HA') 			#firewall HA2
-		#device_cable(fw_1,sw_1,'dmz','G1/0/23','607d8b','cat6','HA') 			#dmz_fw1 to core_1
+		device_cable(fw_1,sw_1,'dmz','G1/0/23','607d8b','cat6','HA') 			#dmz_fw1 to core_1
 		#device_cable(fw_1,sw_1,'port1','G1/0/1','00bcd4','cat6','PO1')			#PO_fw1
 		#device_cable(fw_1,sw_2,'port2','G1/0/1','00bcd4','cat6','PO1')			#PO_fw1
-		#device_cable(fw_2,sw_2,'dmz','G1/0/23','607d8b','cat6','HA')			#dmz_fw2 to core_2
-		#device_cable(fw_2,sw_1,'port1','G1/0/2','00bcd4','cat6','PO2')			#PO_fw2
-		#device_cable(fw_2,sw_2,'port2','G1/0/2','00bcd4','cat6','PO2')			#PO_fw2
+		device_cable(fw_2,sw_2,'dmz','G1/0/23','607d8b','cat6','HA')			#dmz_fw2 to core_2
+		device_cable(fw_2,sw_1,'port1','G1/0/2','00bcd4','cat6','PO2')			#PO_fw2
+		device_cable(fw_2,sw_2,'port2','G1/0/2','00bcd4','cat6','PO2')			#PO_fw2
 		device_cable(sw_1,ap_c,'G1/0/3','G1/0/1','607d8b','cat6','controller')	#aruba controller
 		
 		
