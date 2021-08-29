@@ -205,16 +205,20 @@ class ProvisionMDevices (Script):
 	def setup_cable(self, fw_1, fw_2,sw_1,sw_2,cam_1,cam_2,ap_c):
 		
 		def device_cable(device1, device2, if1, if2, color, type, label):
-			cable = Cable (
-				termination_a = Interface.objects.get (device = device1, name = if1),
-				termination_b = Interface.objects.get (device = device2, name = if2),
-				type = type,
-				color = color,
-				label = label,
-				status = CableStatusChoices.STATUS_PLANNED
-			)
-			cable.save ()
-			self.log_info ("added cable between %s interface %s and %s interface %s" % (device1,if1, device2,if2))
+			try:
+				cable = Cable (
+					termination_a = Interface.objects.get (device = device1, name = if1),
+					termination_b = Interface.objects.get (device = device2, name = if2),
+					type = type,
+					color = color,
+					label = label,
+					status = CableStatusChoices.STATUS_PLANNED
+				)
+				cable.save ()
+				self.log_success ("added cable between %s interface %s and %s interface %s" % (device1,if1, device2,if2))
+			except:
+				pass
+			self.log_info ("cable between %s interface %s and %s interface %s already exists, carryng on" % (device1,if1, device2,if2))
 		#device_cable(fw_1,fw_2,'port6','port6','607d8b','cat6','HA') 			#firewall HA1
 		#device_cable(fw_1,fw_2,'port7','port7','607d8b','cat6','HA') 			#firewall HA2
 		device_cable(fw_1,sw_1,'dmz','G1/0/23','607d8b','cat6','HA') 			#dmz_fw1 to core_1
