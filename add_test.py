@@ -178,28 +178,28 @@ class ProvisionMDevices (Script):
 			if manufacturer.name != 'Aruba':
 				pfx = Prefix.objects.get(site = site, vlan__vid=100) 
 				vlanid = 'vlan100'
-				if manufacturer.name == 'Cisco':
+				if manufacturer.name == 'Fortinet':
+					swip = pfx.prefix[10]
+					sw_name = devicesname + 'FWP001-' + box
+					role = DeviceRole.objects.get (name = 'Firewall')
+					if primary == 1:
+						rack_u = rack.u_height - 10
+				elif manufacturer.name == 'Cisco':
 					swip = pfx.prefix[2]
 					sw_name = devicesname + 'CRP001-' + box
 					role = DeviceRole.objects.get (name = 'Core Switch')
 					if primary == 1:
-						rack_u = rack.u_height - 7
+						rack_u = rack.u_height - 12
 					else:
-						rack_u = rack.u_height - 9
+						rack_u = rack.u_height - 14
 				elif manufacturer.name == 'Ruckus':
 					swip = pfx.prefix[5]
 					sw_name = devicesname + 'CCAM001-' + box
 					role = DeviceRole.objects.get (name = 'Core Cameras')
 					if primary == 1:
-						rack_u = rack.u_height - 11
+						rack_u = rack.u_height - 16
 					else:
-						rack_u = rack.u_height - 13
-				elif manufacturer.name == 'Fortinet':
-					swip = pfx.prefix[10]
-					sw_name = devicesname + 'FWP001-' + box
-					role = DeviceRole.objects.get (name = 'Firewall')
-					if primary == 1:
-						rack_u = rack.u_height - 5
+						rack_u = rack.u_height - 18
 			elif manufacturer.name == 'Aruba': 
 				pfx = Prefix.objects.get(site = site, vlan__vid=20) 
 				vlanid = 'vlan20'
@@ -373,7 +373,10 @@ class ProvisionMDevices (Script):
 		sitetenant = data['site_tenant']
 		devicesname = data['devices_name']
 		firewallmodel = data['firewall_model']
+		firewallmanufacturer = data['firewall_manufacturer']
 		coremanufacturer = data['core_manufacturer']
+		cammanufacturer = data['cam_manufacturer']
+		iapmanufacturer = data['iap_manufacturer']
 		coremodel = data['core_model']
 		cammodel = data['cam_model']
 		iapmodel = data['iap_model']
@@ -381,8 +384,13 @@ class ProvisionMDevices (Script):
 
 		rack = self.create_rack(site)
 		#fw = self.setup_firewall( site, rack, sitetenant, devicesname, firewallmodel, devicestatus)
+		fw = self.setup_device( site, rack, sitetenant, devicesname, firewallmodel, devicestatus, firewallmanufacturer, 1)
+		fw2 = self.setup_device( site, rack, sitetenant, devicesname, firewallmodel, devicestatus, firewallmanufacturer, 2)
 		sw = self.setup_device( site, rack, sitetenant, devicesname, coremodel, devicestatus, coremanufacturer, 1)
 		sw2 = self.setup_device( site, rack, sitetenant, devicesname, coremodel, devicestatus, coremanufacturer, 2)
+		cam = self.setup_device( site, rack, sitetenant, devicesname, cammodel, devicestatus, cammanufacturer, 1)
+		cam2 = self.setup_device( site, rack, sitetenant, devicesname, cammodel, devicestatus, cammanufacturer, 2)
+		iap = self.setup_device( site, rack, sitetenant, devicesname, iapmodel, devicestatus, iapmanufacturer, 2)
 		#cam = self.setup_cam( site, rack, sitetenant, devicesname, cammodel, devicestatus)
 		#iap = self.setup_iap( site, rack, sitetenant, devicesname, iapmodel, devicestatus, sw)
 
