@@ -170,7 +170,11 @@ class ProvisionMDevices (Script):
 
 
 
-	def setup_device(self, site, rack, sitetenant, devicesname, devicemodel, devicestatus, manufacturer, box):
+	def setup_device(self, site, rack, sitetenant, devicesname, devicemodel, devicestatus, manufacturer, primary):
+			if primary == 1:
+				box = '1'
+			else:
+				box = '2'
 			if manufacturer.name != 'Aruba':
 				pfx = Prefix.objects.get(site = site, vlan__vid=100) 
 				vlanid = 100
