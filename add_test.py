@@ -177,7 +177,7 @@ class ProvisionMDevices (Script):
 				box = '2'
 			if manufacturer.name != 'Aruba':
 				pfx = Prefix.objects.get(site = site, vlan__vid=100) 
-				vlanid = 100
+				vlanid = 'vlan100'
 				if manufacturer.name == 'Cisco':
 					swip = pfx.prefix[2]
 					sw_name = devicesname + 'CRP001-' + box
@@ -195,7 +195,7 @@ class ProvisionMDevices (Script):
 					rack_u = rack.u_height - 7
 			elif manufacturer.name == 'Aruba': 
 				pfx = Prefix.objects.get(site = site, vlan__vid=20) 
-				vlanid = 20
+				vlanid = 'vlan20'
 				swip = pfx.prefix[2]
 				sw_name = devicesname + 'CTP001'
 				role = DeviceRole.objects.get (name = 'Controller')
