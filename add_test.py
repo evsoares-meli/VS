@@ -171,25 +171,25 @@ class ProvisionMDevices (Script):
 
 
 	def setup_device(self, site, rack, sitetenant, devicesname, devicemodel, devicestatus, manufacturer, box):
-			if manufacturer != 'Aruba':
+			if manufacturer.name != 'Aruba':
 				pfx = Prefix.objects.get(site = site, vlan__vid=100) 
 				vlanid = 100
-				if manufacturer == 'Cisco':
+				if manufacturer.name == 'Cisco':
 					swip = pfx.prefix[2]
 					sw_name = devicesname + 'CRP001-' + box
 					role = DeviceRole.objects.get (name = 'Core Switch')
 					rack_u = rack.u_height - 7
-				elif manufacturer == 'Ruckus':
+				elif manufacturer.name == 'Ruckus':
 					swip = pfx.prefix[5]
 					sw_name = devicesname + 'CCAM001-' + box
 					role = DeviceRole.objects.get (name = 'Core Cameras')
 					rack_u = rack.u_height - 7
-				elif manufacturer == 'Fortinet':
+				elif manufacturer.name == 'Fortinet':
 					swip = pfx.prefix[10]
 					sw_name = devicesname + 'FWP001-' + box
 					role = DeviceRole.objects.get (name = 'Firewall')
 					rack_u = rack.u_height - 7
-			elif manufacturer == 'Aruba': 
+			elif manufacturer.name == 'Aruba': 
 				pfx = Prefix.objects.get(site = site, vlan__vid=20) 
 				vlanid = 20
 				swip = pfx.prefix[2]
@@ -218,7 +218,7 @@ class ProvisionMDevices (Script):
 			)
 			sw.save()
 			self.log_success('Created device %s' % sw)
-			if manufacturer != 'Aruba':
+			if manufacturer.name != 'Aruba':
 				sw.position = rack_u
 				sw.save()
 
