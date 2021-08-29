@@ -229,7 +229,7 @@ class ProvisionMDevices (Script):
 			)
 			sw.save()
 			self.log_success('Created device %s' % sw)
-			if manufacturer.name != 'Aruba' or (manufacturer.name == 'Fortinet' and primary != 2):
+			if (manufacturer.name == 'Fortinet' and primary != 2):
 				sw.position = rack_u
 				sw.save()
 			
