@@ -179,6 +179,7 @@ class ProvisionMDevices (Script):
 				pfx = Prefix.objects.get(site = site, vlan__vid=100) 
 				vlanid = 'vlan100'
 				if manufacturer.name == 'Fortinet':
+					vlanid = 'dmz'
 					swip = pfx.prefix[10]
 					sw_name = devicesname + 'FWP001-' + box
 					role = DeviceRole.objects.get (name = 'Firewall')
