@@ -229,29 +229,30 @@ class ProvisionMDevices (Script):
 			)
 			sw.save()
 			self.log_success('Created device %s' % sw)
-			if (manufacturer.name == 'Fortinet' and primary != 2):
+			try:
 				sw.position = rack_u
 				sw.save()
-			
+			except:
+				pass
 			#set up mgmt IP
-				if primary == 1:
-					sw_iface = Interface.objects.get (device = sw, name = vlanid)
-					try:
-						sw_iface = IPAddress.objects.get (address = swip)
-						self.log_info("Ip %s already present, carryng on" % swip)
+			if primary == 1:
+				sw_iface = Interface.objects.get (device = sw, name = vlanid)
+				try:
+					sw_iface = IPAddress.objects.get (address = swip)
+					self.log_info("Ip %s already present, carryng on" % swip)
 
-					except IPAddress.DoesNotExist:
-						sw_mgmt_ip = IPAddress (address = swip)
+				except IPAddress.DoesNotExist:
+					sw_mgmt_ip = IPAddress (address = swip)
+					sw_mgmt_ip.save ()
+				finally:
+					if sw_mgmt_ip.assigned_object is None: 
+						sw_mgmt_ip.assigned_object = sw_iface
 						sw_mgmt_ip.save ()
-					finally:
-						if sw_mgmt_ip.assigned_object is None: 
-							sw_mgmt_ip.assigned_object = sw_iface
-							sw_mgmt_ip.save ()
-							sw.primary_ip4 = sw_mgmt_ip
-							sw.save()
-							self.log_success ("Configured %s on interface %s of %s" % (sw_mgmt_ip, sw_iface, sw))
-						else:
-							self.log_info ("Ip %s is already in use for another interface" % (sw_mgmt_ip))
+						sw.primary_ip4 = sw_mgmt_ip
+						sw.save()
+						self.log_success ("Configured %s on interface %s of %s" % (sw_mgmt_ip, sw_iface, sw))
+					else:
+						self.log_info ("Ip %s is already in use for another interface" % (sw_mgmt_ip))
 
 				return sw
 
