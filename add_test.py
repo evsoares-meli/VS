@@ -187,19 +187,18 @@ class ProvisionMDevices (Script):
 					swip = pfx.prefix[5]
 					sw_name = devicesname + 'CCAM001-' + box
 					role = DeviceRole.objects.get (name = 'Core Cameras')
-					rack_u = rack.u_height - 7
+					rack_u = rack.u_height - 9
 				elif manufacturer.name == 'Fortinet':
 					swip = pfx.prefix[10]
 					sw_name = devicesname + 'FWP001-' + box
 					role = DeviceRole.objects.get (name = 'Firewall')
-					rack_u = rack.u_height - 7
+					rack_u = rack.u_height - 5
 			elif manufacturer.name == 'Aruba': 
 				pfx = Prefix.objects.get(site = site, vlan__vid=20) 
 				vlanid = 'vlan20'
 				swip = pfx.prefix[2]
 				sw_name = devicesname + 'CTP001'
 				role = DeviceRole.objects.get (name = 'Controller')
-				rack_u = rack.u_height - 7
 
 			try: 
 				sw = Device.objects.get (name = sw_name)
@@ -225,25 +224,26 @@ class ProvisionMDevices (Script):
 			if manufacturer.name != 'Aruba':
 				sw.position = rack_u
 				sw.save()
-
+			
 			#set up mgmt IP
-			sw_iface = Interface.objects.get (device = sw, name = vlanid)
-			try:
-				sw_iface = IPAddress.objects.get (address = swip)
-				self.log_info("Ip %s already present, carryng on" % swip)
+				if primary == 1:
+					sw_iface = Interface.objects.get (device = sw, name = vlanid)
+					try:
+						sw_iface = IPAddress.objects.get (address = swip)
+						self.log_info("Ip %s already present, carryng on" % swip)
 
-			except IPAddress.DoesNotExist:
-				sw_mgmt_ip = IPAddress (address = swip)
-				sw_mgmt_ip.save ()
-			finally:
-				if sw_mgmt_ip.assigned_object is None: 
-					sw_mgmt_ip.assigned_object = sw_iface
-					sw_mgmt_ip.save ()
-					sw.primary_ip4 = sw_mgmt_ip
-					sw.save()
-					self.log_success ("Configured %s on interface %s of %s" % (sw_mgmt_ip, sw_iface, sw))
-				else:
-					self.log_info ("Ip %s is already in use for another interface" % (sw_mgmt_ip))
+					except IPAddress.DoesNotExist:
+						sw_mgmt_ip = IPAddress (address = swip)
+						sw_mgmt_ip.save ()
+					finally:
+						if sw_mgmt_ip.assigned_object is None: 
+							sw_mgmt_ip.assigned_object = sw_iface
+							sw_mgmt_ip.save ()
+							sw.primary_ip4 = sw_mgmt_ip
+							sw.save()
+							self.log_success ("Configured %s on interface %s of %s" % (sw_mgmt_ip, sw_iface, sw))
+						else:
+							self.log_info ("Ip %s is already in use for another interface" % (sw_mgmt_ip))
 
 				return sw
 
@@ -375,6 +375,7 @@ class ProvisionMDevices (Script):
 		rack = self.create_rack(site)
 		fw = self.setup_firewall( site, rack, sitetenant, devicesname, firewallmodel, devicestatus)
 		sw = self.setup_device( site, rack, sitetenant, devicesname, coremodel, devicestatus, coremanufacturer, 1)
+		sw2 = self.setup_device( site, rack, sitetenant, devicesname, coremodel, devicestatus, coremanufacturer, 2)
 		cam = self.setup_cam( site, rack, sitetenant, devicesname, cammodel, devicestatus)
 		iap = self.setup_iap( site, rack, sitetenant, devicesname, iapmodel, devicestatus, sw)
 
