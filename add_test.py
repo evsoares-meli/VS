@@ -116,60 +116,6 @@ class ProvisionMDevices (Script):
 		self.log_success ("Created rack {}".format (rack))
 		return rack
 
-
-	def setup_firewall(self, site, rack, sitetenant, devicesname, firewallmodel, devicestatus):
-			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
-			fwip = pfx.prefix[10]
-			fw_name = devicesname + 'FWP001-1' 
-
-			try: 
-				fw = Device.objects.get (name = fw_name)
-				self.log_info ("Device %s already present, carryng on." % fw_name)
-
-				return fw
-			except Device.DoesNotExist:
-				pass
-			
-			fw = Device(
-				site = site,
-				tenant = sitetenant,
-				name = fw_name,
-				device_type = firewallmodel,
-				status = devicestatus,
-				device_role = DeviceRole.objects.get (name = 'Firewall'),
-				rack = rack,
-				position = rack.u_height - 5,
-				face = DeviceFaceChoices.FACE_FRONT
-				
-			)
-			fw.save()
-			self.log_success('Created device %s' % fw)
-			
-			#set up mgmt IP
-			fw_iface = Interface.objects.get (device = fw, name = 'dmz')
-			
-			try:
-				fw_mgmt_ip = IPAddress.objects.get (address = fwip)
-				self.log_info("Ip %s already present, carryng on" % fwip)
-			
-			except IPAddress.DoesNotExist:
-				fw_mgmt_ip = IPAddress (address = fwip)
-				fw_mgmt_ip.save ()
-			
-			finally:
-				if fw_mgmt_ip.assigned_object is None:
-					fw_mgmt_ip.assigned_object = fw_iface
-					fw_mgmt_ip.save ()
-					fw.primary_ip4 = fw_mgmt_ip
-					fw.save()
-					self.log_success ("Configured %s on interface %s of %s" % (fw_mgmt_ip, fw_iface, fw))
-				else:
-					self.log_info ("Ip %s is already in use for another interface" % (fw_mgmt_ip))
-
-				return fw
-
-
-
 	def setup_device(self, site, rack, sitetenant, devicesname, devicemodel, devicestatus, manufacturer, primary):
 			if primary == 1:
 				box = '1'
@@ -256,120 +202,30 @@ class ProvisionMDevices (Script):
 
 				return sw
 
-
-
-	def setup_cam(self, site, rack, sitetenant, devicesname, cammodel, devicestatus):
-			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
-			camip = pfx.prefix[5]
-			cam_name = devicesname + 'CCAM001-1'
-
-			try: 
-				cam = Device.objects.get (name = cam_name)
-				self.log_info ("Device %s already present, carryng on." % cam_name)
-
-				return cam
-			except Device.DoesNotExist:
-				pass 
-			
-			cam = Device(
-				site = site,
-				tenant = sitetenant,
-				name = cam_name,
-				device_type = cammodel,
-				status = devicestatus,
-				device_role = DeviceRole.objects.get (name = 'Core Cameras'),
-				rack = rack,
-				position = rack.u_height - 9,
-				face = DeviceFaceChoices.FACE_FRONT
-				
+	def setup_cable(self, fw_1, fw_2,sw_1,sw_2,cam_1,cam_2,ap_c):
+		
+		def device_cable(device1, device2, if1, if2, color, type, label):
+			cable = Cable (
+				termination_a = Interface.objects.get (device = device1, name = if1),
+				termination_b = Interface.objects.get (device = device2, name = if2),
+				type = type,
+				color = color,
+				label = label,
+				status = CableStatusChoices.STATUS_PLANNED
 			)
-			cam.save()
-			self.log_success('Created device %s' % cam)
-
-			#set up mgmt IP
-			cam_iface = Interface.objects.get (device = cam, name = 'vlan100')
-
-			try:
-				cam_mgmt_ip = IPAddress.objects.get (address = camip)
-				self.log_info("Ip %s already present, carryng on" % camip)
-			except IPAddress.DoesNotExist:
-				cam_mgmt_ip = IPAddress (address = camip)
-				cam_mgmt_ip.save ()
-			finally:
-				if cam_mgmt_ip.assigned_object is None:
-					cam_mgmt_ip.assigned_object = cam_iface
-					cam_mgmt_ip.save ()
-					cam.primary_ip4 = cam_mgmt_ip
-					cam.save()
-					self.log_success ("Configured %s on interface %s of %s" % (cam_mgmt_ip, cam_iface, cam))
-				else:
-					self.log_info ("Ip %s is already in use for another interface" % (cam_mgmt_ip))
-									
-				return cam
-
-
-
-	def setup_iap(self, site, rack, sitetenant, devicesname, iapmodel, devicestatus, sw):
-			pfx = Prefix.objects.get(site = site, vlan__vid=20) 
-			iapip = pfx.prefix[2]
-			iap_name = devicesname + 'CTP001'
-
-			try: 
-				iap = Device.objects.get (name = iap_name)
-				self.log_info ("Device %s already present, carryng on." % iap_name)
-
-				return iap
-			except Device.DoesNotExist:
-				pass
-			
-			iap = Device(
-				site = site,
-				tenant = sitetenant,
-				name = iap_name,
-				device_type = iapmodel,
-				status = devicestatus,
-				device_role = DeviceRole.objects.get (name = 'Controller'),
-				rack = rack,
-				#position = rack.u_height - 5,
-				face = DeviceFaceChoices.FACE_FRONT
-				
-			)
-			iap.save()
-			self.log_success('Created device %s' % iap)
-			
-			#set up mgmt IP
-			iap_iface = Interface.objects.get (device = iap, name = 'vlan20')
-			
-			try:
-				iap_mgmt_ip = IPAddress.objects.get (address = iapip)
-				self.log_info("Ip %s already present, carryng on" % iapip)
-
-			except IPAddress.DoesNotExist:
-				iap_mgmt_ip = IPAddress (address = iapip)
-				iap_mgmt_ip.save ()
-
-			finally:
-				if iap_mgmt_ip.assigned_object is None:
-					iap_mgmt_ip.assigned_object = iap_iface
-					iap_mgmt_ip.save ()
-					iap.primary_ip4 = iap_mgmt_ip
-					iap.save()
-					self.log_success ("Configured %s on interface %s of %s" % (iap_mgmt_ip, iap_iface, iap))
-				else:
-					self.log_info ("Ip %s is already in use for another interface" % (iap_mgmt_ip))
-				cable = Cable (
-					termination_a = Interface.objects.get (device = sw, name = 'G1/0/3'),
-					termination_b = Interface.objects.get (device = iap, name = 'G1/0/1'),
-					color = '3f51b5',
-					status = CableStatusChoices.STATUS_PLANNED
-				)
-				cable.save ()
-
-
-				return iap
-
-	
-	
+			cable.save ()
+		device_cable(fw_1,fw_2,'port6','port6','607d8b','cat6','HA') 			#firewall HA1
+		device_cable(fw_1,fw_2,'port7','port7','607d8b','cat6','HA') 			#firewall HA2
+		device_cable(fw_1,sw_1,'dmz','G1/0/23','607d8b','cat6','HA') 			#dmz_fw1 to core_1
+		device_cable(fw_1,sw_1,'port1','G1/0/1','00bcd4','cat6','PO1')			#PO_fw1
+		device_cable(fw_1,sw_2,'port2','G1/0/1','00bcd4','cat6','PO1')			#PO_fw1
+		device_cable(fw_2,sw_2,'dmz','G1/0/23','607d8b','cat6','HA')			#dmz_fw2 to core_2
+		device_cable(fw_2,sw_1,'port1','G1/0/2','00bcd4','cat6','PO2')			#PO_fw2
+		device_cable(fw_2,sw_2,'port2','G1/0/2','00bcd4','cat6','PO2')			#PO_fw2
+		device_cable(sw_1,ap_c,'G1/0/3','G1/0/1','607d8b','cat6','controller')	#aruba controller
+		
+		
+		
 	def run (self, data, commit):
 		site = data['site']
 		sitetenant = data['site_tenant']
@@ -385,7 +241,6 @@ class ProvisionMDevices (Script):
 		devicestatus = data['device_status']
 
 		rack = self.create_rack(site)
-		#fw = self.setup_firewall( site, rack, sitetenant, devicesname, firewallmodel, devicestatus)
 		fw = self.setup_device( site, rack, sitetenant, devicesname, firewallmodel, devicestatus, firewallmanufacturer, 1)
 		fw2 = self.setup_device( site, rack, sitetenant, devicesname, firewallmodel, devicestatus, firewallmanufacturer, 2)
 		sw = self.setup_device( site, rack, sitetenant, devicesname, coremodel, devicestatus, coremanufacturer, 1)
@@ -393,16 +248,15 @@ class ProvisionMDevices (Script):
 		cam = self.setup_device( site, rack, sitetenant, devicesname, cammodel, devicestatus, cammanufacturer, 1)
 		cam2 = self.setup_device( site, rack, sitetenant, devicesname, cammodel, devicestatus, cammanufacturer, 2)
 		iap = self.setup_device( site, rack, sitetenant, devicesname, iapmodel, devicestatus, iapmanufacturer, 1)
-		#cam = self.setup_cam( site, rack, sitetenant, devicesname, cammodel, devicestatus)
-		#iap = self.setup_iap( site, rack, sitetenant, devicesname, iapmodel, devicestatus, sw)
+		self.setup_cable(self, fw, fw2,sw,sw2,cam,cam2,iap)
 
 
 
 
-# criar devices OK
+# criar devices OK 
 # 		criar devices secundarios
 #			criar chassis
-#				cabear devices
+#				cabear devices 
 
 # inserir ip nos devices OK
 
