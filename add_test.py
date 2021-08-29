@@ -200,7 +200,7 @@ class ProvisionMDevices (Script):
 					else:
 						self.log_info ("Ip %s is already in use for another interface" % (sw_mgmt_ip))
 
-				return sw
+			return sw
 
 	def setup_cable(self, fw_1, fw_2,sw_1,sw_2,cam_1,cam_2,ap_c):
 		
