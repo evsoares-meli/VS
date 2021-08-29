@@ -202,7 +202,7 @@ class ProvisionMDevices (Script):
 
 			return sw
 
-	def setup_cable(self, fw_1, fw_2,sw_1,sw_2,cam_1,cam_2,ap_c):
+	def setup_cable(self, fw_1, fw_2,sw_1,sw_2,cam_1,ap_c):
 		
 		def device_cable(device1, device2, if1, if2, color, type, label):
 			try:
@@ -251,9 +251,8 @@ class ProvisionMDevices (Script):
 		sw = self.setup_device( site, rack, sitetenant, devicesname, coremodel, devicestatus, coremanufacturer, 1)
 		sw2 = self.setup_device( site, rack, sitetenant, devicesname, coremodel, devicestatus, coremanufacturer, 2)
 		cam = self.setup_device( site, rack, sitetenant, devicesname, cammodel, devicestatus, cammanufacturer, 1)
-		cam2 = self.setup_device( site, rack, sitetenant, devicesname, cammodel, devicestatus, cammanufacturer, 2)
 		iap = self.setup_device( site, rack, sitetenant, devicesname, iapmodel, devicestatus, iapmanufacturer, 1)
-		self.setup_cable(fw, fw2,sw,sw2,cam,cam2,iap)
+		self.setup_cable(fw, fw2,sw,sw2,cam,iap)
 
 
 
