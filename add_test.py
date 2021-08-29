@@ -170,10 +170,32 @@ class ProvisionMDevices (Script):
 
 
 
-	def setup_switch(self, site, rack, sitetenant, devicesname, coremodel, devicestatus):
-			pfx = Prefix.objects.get(site = site, vlan__vid=100) 
-			swip = pfx.prefix[2]
-			sw_name = devicesname + 'CRP001-1'
+	def setup_device(self, site, rack, sitetenant, devicesname, devicemodel, devicestatus, manufacturer, box):
+			if manufacturer != 'Aruba':
+				pfx = Prefix.objects.get(site = site, vlan__vid=100) 
+				vlanid = 100
+				if manufacturer == 'Cisco':
+					swip = pfx.prefix[2]
+					sw_name = devicesname + 'CRP001-' + box
+					role = DeviceRole.objects.get (name = 'Core Switch')
+					rack_u = rack.u_height - 7
+				elif manufacturer == 'Ruckus':
+					swip = pfx.prefix[5]
+					sw_name = devicesname + 'CCAM001-' + box
+					role = DeviceRole.objects.get (name = 'Core Cameras')
+					rack_u = rack.u_height - 7
+				elif manufacturer == 'Fortinet':
+					swip = pfx.prefix[10]
+					sw_name = devicesname + 'FWP001-' + box
+					role = DeviceRole.objects.get (name = 'Firewall')
+					rack_u = rack.u_height - 7
+			elif manufacturer == 'Aruba': 
+				pfx = Prefix.objects.get(site = site, vlan__vid=20) 
+				vlanid = 20
+				swip = pfx.prefix[2]
+				sw_name = devicesname + 'CTP001'
+				role = DeviceRole.objects.get (name = 'Controller')
+				rack_u = rack.u_height - 7
 
 			try: 
 				sw = Device.objects.get (name = sw_name)
@@ -187,19 +209,21 @@ class ProvisionMDevices (Script):
 				site = site,
 				tenant = sitetenant,
 				name = sw_name,
-				device_type = coremodel,
+				device_type = devicemodel,
 				status = devicestatus,
-				device_role = DeviceRole.objects.get (name = 'Core Switch'),
+				device_role = role,
 				rack = rack,
-				position = rack.u_height - 7,
 				face = DeviceFaceChoices.FACE_FRONT
 				
 			)
 			sw.save()
 			self.log_success('Created device %s' % sw)
+			if manufacturer != 'Aruba':
+				sw.position = rack_u
+				sw.save()
 
 			#set up mgmt IP
-			sw_iface = Interface.objects.get (device = sw, name = 'vlan100')
+			sw_iface = Interface.objects.get (device = sw, name = vlanid)
 			try:
 				sw_iface = IPAddress.objects.get (address = swip)
 				self.log_info("Ip %s already present, carryng on" % swip)
@@ -338,6 +362,7 @@ class ProvisionMDevices (Script):
 		sitetenant = data['site_tenant']
 		devicesname = data['devices_name']
 		firewallmodel = data['firewall_model']
+		coremanufacturer = data['core_manufacturer']
 		coremodel = data['core_model']
 		cammodel = data['cam_model']
 		iapmodel = data['iap_model']
@@ -345,7 +370,7 @@ class ProvisionMDevices (Script):
 
 		rack = self.create_rack(site)
 		fw = self.setup_firewall( site, rack, sitetenant, devicesname, firewallmodel, devicestatus)
-		sw = self.setup_switch( site, rack, sitetenant, devicesname, coremodel, devicestatus)
+		sw = self.setup_device( site, rack, sitetenant, devicesname, coremodel, devicestatus, coremanufacturer, 1)
 		cam = self.setup_cam( site, rack, sitetenant, devicesname, cammodel, devicestatus)
 		iap = self.setup_iap( site, rack, sitetenant, devicesname, iapmodel, devicestatus, sw)
 
@@ -371,5 +396,7 @@ class ProvisionMDevices (Script):
 #SCRIPT PARA POR EM ACTIVE!!
 
 
+
+#cables - precisa colocar type e label? era  bao kkk
 #colors
 # UTP - Indigo - 3f51b5
