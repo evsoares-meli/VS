@@ -248,7 +248,7 @@ class ProvisionMDevices (Script):
 		cam = self.setup_device( site, rack, sitetenant, devicesname, cammodel, devicestatus, cammanufacturer, 1)
 		cam2 = self.setup_device( site, rack, sitetenant, devicesname, cammodel, devicestatus, cammanufacturer, 2)
 		iap = self.setup_device( site, rack, sitetenant, devicesname, iapmodel, devicestatus, iapmanufacturer, 1)
-		self.setup_cable(self, fw, fw2,sw,sw2,cam,cam2,iap)
+		self.setup_cable(fw, fw2,sw,sw2,cam,cam2,iap)
 
 
 
