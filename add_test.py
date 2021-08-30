@@ -229,8 +229,8 @@ class ProvisionMDevices (Script):
 			device_cable(fw_1,sw_1,'dmz','G1/0/23','3f51b5','cat6','HA') 			#dmz_fw1 to core_1
 			device_cable(fw_2,sw_2,'dmz','G1/0/23','3f51b5','cat6','HA')			#dmz_fw2 to core_2
 		elif sw_1.model in list(sw48p):
-			device_cable(fw_1,sw_1,'dmz','G1/0/23','3f51b5','cat6','HA') 			#dmz_fw1 to core_1
-			device_cable(fw_2,sw_2,'dmz','G1/0/23','3f51b5','cat6','HA')			#dmz_fw2 to core_2
+			device_cable(fw_1,sw_1,'dmz','G1/0/47','3f51b5','cat6','HA') 			#dmz_fw1 to core_1
+			device_cable(fw_2,sw_2,'dmz','G1/0/47','3f51b5','cat6','HA')			#dmz_fw2 to core_2
 		
 		device_cable(fw_1,sw_1,'port1','G1/0/1','00bcd4','cat6','PO1')			#PO_fw1
 		device_cable(fw_1,sw_2,'port2','G1/0/1','00bcd4','cat6','PO1')			#PO_fw1
