@@ -2,7 +2,7 @@ from typing_extensions import final
 from django.utils.text import slugify
 
 from dcim.choices import *
-from dcim.models import Cable, Device, DeviceRole, DeviceType, Platform, Rack, RackRole, Site, Manufacturer
+from dcim.models import Cable, Device, DeviceRole, DeviceType, Platform, Rack, RackRole, Site, Manufacturer, VirtualChassis
 from dcim.models.device_components import FrontPort, Interface, RearPort
 from tenancy.models import TenantGroup, Tenant
 from ipam.choices import *
@@ -199,6 +199,28 @@ class ProvisionMDevices (Script):
 
 			return device
 
+	def setup_chassis(self, fw_1, fw_2, sw_1, sw_2, name):
+		def create_chassis(master, slave, name, pos_1, pos_2, pri_1, pri_2):
+			virtualchassis = VirtualChassis (
+				name = name,
+				domain = 'ml.com'
+			)
+			virtualchassis.save()
+			master.virtual_chassis = virtualchassis
+			master.vc_position = pos_1
+			master.vc_priority = pri_1
+			master.save()
+			virtualchassis.master = master
+			virtualchassis.save()
+			slave.virtual_chassis = virtualchassis
+			slave.vc_position = pos_2
+			slave.vc_priority = pri_2
+			slave.save()
+		name_fw = str(name) + 'FWP001'
+		name_sw = str(name) + 'SWP001'
+		create_chassis(fw_1,fw_2,name_fw,1,2,140,128)
+		create_chassis(sw_1,sw_2,name_sw,1,2,15,1)
+
 	def setup_cable(self, fw_1, fw_2,firewallmodel,sw_1,sw_2, coremodel, coremanufacturer,cam_1,ap_c):
 		sw24p = list(DeviceType.objects.filter(model__icontains='24p').values_list('model', flat='true')) #get all 24p switches
 		sw48p = list(DeviceType.objects.filter(model__icontains='48p').values_list('model', flat='true')) #get all 24p switches
@@ -282,6 +304,7 @@ class ProvisionMDevices (Script):
 		sw2 = self.setup_device( site, rack, sitetenant, devicesname, coremodel, devicestatus, coremanufacturer, 2)
 		cam = self.setup_device( site, rack, sitetenant, devicesname, cammodel, devicestatus, cammanufacturer, 1)
 		iap = self.setup_device( site, rack, sitetenant, devicesname, iapmodel, devicestatus, iapmanufacturer, 1)
+		self.setup_chassis(fw, fw2, sw, sw2, devicesname)
 		self.setup_cable(fw, fw2, firewallmodel,sw,sw2,coremodel, coremanufacturer, cam,iap)
 
 
@@ -289,13 +312,14 @@ class ProvisionMDevices (Script):
 
 # criar devices OK 
 # 		criar devices secundarios ok
-#			cabear devices (falta ruckus e cisco stack 9200 e 1000)
+#			cabear devices (falta ruckus e cisco stack 9200 e 1000) ok
 #				criar chassis
 
 # inserir ip nos devices OK
 
 # criar rack ok
 #	inserir devices no rack ok
+# 	inserir patch pannels
 
 # 
 # 
