@@ -113,7 +113,7 @@ class ProvisionMDevices (Script):
 		)
 
 		rack.save ()
-		self.log_success ("Created rack {}".format (rack))
+		self.log_success ("Created rack {}.".format (rack))
 		return rack
 
 	def setup_device(self, site, rack, sitetenant, devicesname, devicemodel, devicestatus, manufacturer, primary):
@@ -171,7 +171,7 @@ class ProvisionMDevices (Script):
 				
 			)
 			device.save()
-			self.log_success('Created device %s' % device)
+			self.log_success('Created device %s.' % device)
 			try:
 				device.position = rack_u
 				device.save()
@@ -182,7 +182,7 @@ class ProvisionMDevices (Script):
 				device_iface = Interface.objects.get (device = device, name = vlanid)
 				try:
 					device_iface = IPAddress.objects.get (address = device_ip)
-					self.log_info("Ip %s already present, carryng on" % device_ip)
+					self.log_info("Ip %s already present, carryng on." % device_ip)
 
 				except IPAddress.DoesNotExist:
 					device_mgmt_ip = IPAddress (address = device_ip)
@@ -193,9 +193,9 @@ class ProvisionMDevices (Script):
 						device_mgmt_ip.save ()
 						device.primary_ip4 = device_mgmt_ip
 						device.save()
-						self.log_success ("Configured %s on interface %s of %s" % (device_mgmt_ip, device_iface, device))
+						self.log_success ("Configured %s on interface %s of %s." % (device_mgmt_ip, device_iface, device))
 					else:
-						self.log_info ("Ip %s is already in use for another interface" % (device_mgmt_ip))
+						self.log_info ("Ip %s is already in use for another interface." % (device_mgmt_ip))
 
 			return device
 
@@ -206,7 +206,7 @@ class ProvisionMDevices (Script):
 				domain = 'ml.com'
 			)
 			virtualchassis.save()
-			self.log_success ("Created chassis %s" % (virtualchassis))
+			self.log_success ("Created chassis %s." % (virtualchassis))
 			master.virtual_chassis = virtualchassis
 			master.vc_position = pos_1
 			master.vc_priority = pri_1
@@ -217,7 +217,7 @@ class ProvisionMDevices (Script):
 			slave.vc_position = pos_2
 			slave.vc_priority = pri_2
 			slave.save()
-			self.log_success ("Added %s and %s to virtual chassis %s" % (master, slave, virtualchassis))
+			self.log_success ("Added %s and %s to virtual chassis %s." % (master, slave, virtualchassis))
 
 		name_fw = str(name) + 'FWP001'
 		name_sw = str(name) + 'CRP001'
@@ -238,9 +238,9 @@ class ProvisionMDevices (Script):
 					status = CableStatusChoices.STATUS_PLANNED
 				)
 				cable.save ()
-				self.log_success ("added cable between %s interface %s and %s interface %s" % (device1,if1, device2,if2))
+				self.log_success ("Added cable between %s interface %s and %s interface %s." % (device1,if1, device2,if2))
 			except:
-				self.log_info ("cable between %s interface %s and %s interface %s already exists, or interfaces doesn't exists, carryng on" % (device1,if1, device2,if2))
+				self.log_info ("Cable between %s interface %s and %s interface %s already exists, or interfaces doesn't exists, carryng on." % (device1,if1, device2,if2))
 				pass
 		def setup_stack(device1, device2, if1, if2, color, type, label):
 			try:
@@ -253,9 +253,9 @@ class ProvisionMDevices (Script):
 					status = CableStatusChoices.STATUS_PLANNED
 				)
 				cable.save ()
-				self.log_success ("added cable between %s interface %s and %s interface %s" % (device1,if1, device2,if2))
+				self.log_success ("Added cable between %s interface %s and %s interface %s" % (device1,if1, device2,if2))
 			except:
-				self.log_info ("cable between %s interface %s and %s interface %s already exists, or interfaces doesn't exists, carryng on" % (device1,if1, device2,if2))
+				self.log_info ("Cable between %s interface %s and %s interface %s already exists, or interfaces doesn't exists, carryng on." % (device1,if1, device2,if2))
 				pass
 		
 		if str(firewallmodel) == 'Fortigate-60F':
@@ -284,6 +284,7 @@ class ProvisionMDevices (Script):
 			else:
 				setup_stack(sw_1,sw_2,'Stack01','Stack02','111111','Direct Attach Copper (Active)','stack wise')	#Cores Stack
 				setup_stack(sw_1,sw_2,'Stack02','Stack01','111111','Direct Attach Copper (Active)','stack wise')	#Cores Stack
+		device_cable(sw_1,cam_1,'G1/0/10','G1/2/1','3f51b5','cat6','Cameras-Uplink')	#aruba controller
 
 		
 	def run (self, data, commit):
@@ -315,8 +316,8 @@ class ProvisionMDevices (Script):
 
 # criar devices OK 
 # 		criar devices secundarios ok
-#			cabear devices (falta ruckus e cisco stack 9200 e 1000) ok
-#				criar chassis
+#			cabear devices (falta RUCKUS!!! )
+#				criar chassis ok
 
 # inserir ip nos devices OK
 
