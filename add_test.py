@@ -199,7 +199,7 @@ class ProvisionMDevices (Script):
 
 			return device
 
-	def setup_cable(self, fw_1, fw_2,firewallmodel,sw_1,sw_2,coremodel,cam_1,ap_c):
+	def setup_cable(self, fw_1, fw_2,firewallmodel,sw_1,sw_2, coremanufacturer, coremodel,cam_1,ap_c):
 		sw24p = list(DeviceType.objects.filter(model__icontains='24p').values_list('model', flat='true')) #get all 24p switches
 		sw48p = list(DeviceType.objects.filter(model__icontains='48p').values_list('model', flat='true')) #get all 24p switches
 		def device_cable(device1, device2, if1, if2, color, type, label):
@@ -207,6 +207,21 @@ class ProvisionMDevices (Script):
 				cable = Cable (
 					termination_a = Interface.objects.get (device = device1, name = if1),
 					termination_b = Interface.objects.get (device = device2, name = if2),
+					type = type,
+					color = color,
+					label = label,
+					status = CableStatusChoices.STATUS_PLANNED
+				)
+				cable.save ()
+				self.log_success ("added cable between %s interface %s and %s interface %s" % (device1,if1, device2,if2))
+			except:
+				self.log_info ("cable between %s interface %s and %s interface %s already exists, or interfaces doesn't exists, carryng on" % (device1,if1, device2,if2))
+				pass
+		def setup_stack(device1, device2, if1, if2, color, type, label):
+			try:
+				cable = Cable (
+					termination_a = RearPort.objects.get (device = device1, name = if1),
+					termination_b = RearPort.objects.get (device = device2, name = if2),
 					type = type,
 					color = color,
 					label = label,
@@ -237,8 +252,14 @@ class ProvisionMDevices (Script):
 		device_cable(fw_2,sw_1,'port1','G1/0/2','00bcd4','cat6','PO2')			#PO_fw2
 		device_cable(fw_2,sw_2,'port2','G1/0/2','00bcd4','cat6','PO2')			#PO_fw2
 		device_cable(sw_1,ap_c,'G1/0/3','G1/0/1','3f51b5','cat6','controller')	#aruba controller
-		
-		
+		if str(coremanufacturer) == 'Cisco':
+			if str(coremodel) == 'Catalyst 1000-24P':
+				device_cable(sw_1,sw_2,'G1/0/26','G1/0/26','ff9800','Singlemode Fiber','fiber - stack')	#Cores Stack
+				device_cable(sw_1,sw_2,'G1/0/27','G1/0/27','ff9800','Singlemode Fiber','fiber - stack')	#Cores Stack
+			else:
+				setup_stack(sw_1,sw_2,'Stack01','Stack02','111111','Direct Attach Copper (Active)','stack wise')	#Cores Stack
+				setup_stack(sw_1,sw_2,'Stack02','Stack01','111111','Direct Attach Copper (Active)','stack wise')	#Cores Stack
+
 		
 	def run (self, data, commit):
 		site = data['site']
@@ -261,7 +282,7 @@ class ProvisionMDevices (Script):
 		sw2 = self.setup_device( site, rack, sitetenant, devicesname, coremodel, devicestatus, coremanufacturer, 2)
 		cam = self.setup_device( site, rack, sitetenant, devicesname, cammodel, devicestatus, cammanufacturer, 1)
 		iap = self.setup_device( site, rack, sitetenant, devicesname, iapmodel, devicestatus, iapmanufacturer, 1)
-		self.setup_cable(fw, fw2, firewallmodel,sw,sw2,coremodel,cam,iap)
+		self.setup_cable(fw, fw2, firewallmodel,sw,sw2,coremodel, coremanufacturer, cam,iap)
 
 
 
