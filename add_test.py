@@ -218,17 +218,17 @@ class ProvisionMDevices (Script):
 				self.log_info ("cable between %s interface %s and %s interface %s already exists, carryng on" % (device1,if1, device2,if2))
 				pass
 		
-		if fw_1.model == 'Fortigate-60F':
+		if fw_1.device_type == 'Fortigate-60F':
 			device_cable(fw_1,fw_2,'porta','porta','607d8b','cat6','HA') 			#firewall HA1
 			device_cable(fw_1,fw_2,'portb','portb','607d8b','cat6','HA') 			#firewall HA2
 		else:	
 			device_cable(fw_1,fw_2,'port6','port6','607d8b','cat6','HA') 			#firewall HA1
 			device_cable(fw_1,fw_2,'port7','port7','607d8b','cat6','HA') 			#firewall HA2
 		
-		if sw_1.model in list(sw24p):
+		if sw_1.device_type in list(sw24p):
 			device_cable(fw_1,sw_1,'dmz','G1/0/23','3f51b5','cat6','HA') 			#dmz_fw1 to core_1
 			device_cable(fw_2,sw_2,'dmz','G1/0/23','3f51b5','cat6','HA')			#dmz_fw2 to core_2
-		elif sw_1.model in list(sw48p):
+		elif sw_1.device_type in list(sw48p):
 			device_cable(fw_1,sw_1,'dmz','G1/0/47','3f51b5','cat6','HA') 			#dmz_fw1 to core_1
 			device_cable(fw_2,sw_2,'dmz','G1/0/47','3f51b5','cat6','HA')			#dmz_fw2 to core_2
 		
