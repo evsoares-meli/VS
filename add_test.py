@@ -199,7 +199,7 @@ class ProvisionMDevices (Script):
 
 			return device
 
-	def setup_cable(self, fw_1, fw_2,sw_1,sw_2,cam_1,ap_c):
+	def setup_cable(self, fw_1, fw_2,firewallmodel,sw_1,sw_2,coremodel,cam_1,ap_c):
 		sw24p = list(DeviceType.objects.filter(model__icontains='24p').values_list('model', flat='true')) #get all 24p switches
 		sw48p = list(DeviceType.objects.filter(model__icontains='48p').values_list('model', flat='true')) #get all 24p switches
 		def device_cable(device1, device2, if1, if2, color, type, label):
@@ -215,20 +215,20 @@ class ProvisionMDevices (Script):
 				cable.save ()
 				self.log_success ("added cable between %s interface %s and %s interface %s" % (device1,if1, device2,if2))
 			except:
-				self.log_info ("cable between %s interface %s and %s interface %s already exists, carryng on" % (device1,if1, device2,if2))
+				self.log_info ("cable between %s interface %s and %s interface %s already exists, or interfaces doesn't exists, carryng on" % (device1,if1, device2,if2))
 				pass
 		
-		if fw_1.device_type == 'fortigate-60f':
+		if firewallmodel == 'fortigate-60f':
 			device_cable(fw_1,fw_2,'porta','porta','607d8b','cat6','HA') 			#firewall HA1
 			device_cable(fw_1,fw_2,'portb','portb','607d8b','cat6','HA') 			#firewall HA2
 		else:	
 			device_cable(fw_1,fw_2,'port6','port6','607d8b','cat6','HA') 			#firewall HA1
 			device_cable(fw_1,fw_2,'port7','port7','607d8b','cat6','HA') 			#firewall HA2
 		
-		if sw_1.device_type in list(sw24p):
+		if coremodel in list(sw24p):
 			device_cable(fw_1,sw_1,'dmz','G1/0/23','3f51b5','cat6','HA') 			#dmz_fw1 to core_1
 			device_cable(fw_2,sw_2,'dmz','G1/0/23','3f51b5','cat6','HA')			#dmz_fw2 to core_2
-		elif sw_1.device_type in list(sw48p):
+		elif coremodel in list(sw48p):
 			device_cable(fw_1,sw_1,'dmz','G1/0/47','3f51b5','cat6','HA') 			#dmz_fw1 to core_1
 			device_cable(fw_2,sw_2,'dmz','G1/0/47','3f51b5','cat6','HA')			#dmz_fw2 to core_2
 		
@@ -261,7 +261,7 @@ class ProvisionMDevices (Script):
 		sw2 = self.setup_device( site, rack, sitetenant, devicesname, coremodel, devicestatus, coremanufacturer, 2)
 		cam = self.setup_device( site, rack, sitetenant, devicesname, cammodel, devicestatus, cammanufacturer, 1)
 		iap = self.setup_device( site, rack, sitetenant, devicesname, iapmodel, devicestatus, iapmanufacturer, 1)
-		self.setup_cable(fw, fw2,sw,sw2,cam,iap)
+		self.setup_cable(fw, fw2, firewallmodel,sw,sw2,coremodel,cam,iap)
 
 
 
