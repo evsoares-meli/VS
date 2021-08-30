@@ -218,7 +218,7 @@ class ProvisionMDevices (Script):
 				self.log_info ("cable between %s interface %s and %s interface %s already exists, or interfaces doesn't exists, carryng on" % (device1,if1, device2,if2))
 				pass
 		
-		if firewallmodel == 'fortigate-60f':
+		if firewallmodel == 'Fortigate-60F':
 			device_cable(fw_1,fw_2,'porta','porta','607d8b','cat6','HA') 			#firewall HA1
 			device_cable(fw_1,fw_2,'portb','portb','607d8b','cat6','HA') 			#firewall HA2
 		else:	
