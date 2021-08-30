@@ -199,7 +199,7 @@ class ProvisionMDevices (Script):
 
 			return device
 
-	def setup_cable(self, fw_1, fw_2,firewallmodel,sw_1,sw_2, coremanufacturer, coremodel,cam_1,ap_c):
+	def setup_cable(self, fw_1, fw_2,firewallmodel,sw_1,sw_2, coremodel, coremanufacturer,cam_1,ap_c):
 		sw24p = list(DeviceType.objects.filter(model__icontains='24p').values_list('model', flat='true')) #get all 24p switches
 		sw48p = list(DeviceType.objects.filter(model__icontains='48p').values_list('model', flat='true')) #get all 24p switches
 		def device_cable(device1, device2, if1, if2, color, type, label):
