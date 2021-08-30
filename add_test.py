@@ -206,6 +206,7 @@ class ProvisionMDevices (Script):
 				domain = 'ml.com'
 			)
 			virtualchassis.save()
+			self.log_success ("Created chassis %s" % (virtualchassis))
 			master.virtual_chassis = virtualchassis
 			master.vc_position = pos_1
 			master.vc_priority = pri_1
@@ -216,6 +217,8 @@ class ProvisionMDevices (Script):
 			slave.vc_position = pos_2
 			slave.vc_priority = pri_2
 			slave.save()
+			self.log_success ("Added %s and %s to virtual chassis %s" % (master, slave, virtualchassis))
+
 		name_fw = str(name) + 'FWP001'
 		name_sw = str(name) + 'SWP001'
 		create_chassis(fw_1,fw_2,name_fw,1,2,140,128)
