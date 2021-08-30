@@ -220,7 +220,7 @@ class ProvisionMDevices (Script):
 			self.log_success ("Added %s and %s to virtual chassis %s" % (master, slave, virtualchassis))
 
 		name_fw = str(name) + 'FWP001'
-		name_sw = str(name) + 'SWP001'
+		name_sw = str(name) + 'CRP001'
 		create_chassis(fw_1,fw_2,name_fw,1,2,140,128)
 		create_chassis(sw_1,sw_2,name_sw,1,2,15,1)
 
