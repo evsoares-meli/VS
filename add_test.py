@@ -200,7 +200,8 @@ class ProvisionMDevices (Script):
 			return device
 
 	def setup_cable(self, fw_1, fw_2,sw_1,sw_2,cam_1,ap_c):
-		
+		sw24p = list(DeviceType.objects.filter(model__icontains='24p').values_list('model', flat='true')) #get all 24p switches
+		sw48p = list(DeviceType.objects.filter(model__icontains='48p').values_list('model', flat='true')) #get all 24p switches
 		def device_cable(device1, device2, if1, if2, color, type, label):
 			try:
 				cable = Cable (
@@ -216,12 +217,23 @@ class ProvisionMDevices (Script):
 			except:
 				self.log_info ("cable between %s interface %s and %s interface %s already exists, carryng on" % (device1,if1, device2,if2))
 				pass
-		device_cable(fw_1,fw_2,'port6','port6','607d8b','cat6','HA') 			#firewall HA1
-		device_cable(fw_1,fw_2,'port7','port7','607d8b','cat6','HA') 			#firewall HA2
-		device_cable(fw_1,sw_1,'dmz','G1/0/23','3f51b5','cat6','HA') 			#dmz_fw1 to core_1
+		
+		if fw_1.model == 'Fortigate-60F':
+			device_cable(fw_1,fw_2,'porta','porta','607d8b','cat6','HA') 			#firewall HA1
+			device_cable(fw_1,fw_2,'portb','portb','607d8b','cat6','HA') 			#firewall HA2
+		else:	
+			device_cable(fw_1,fw_2,'port6','port6','607d8b','cat6','HA') 			#firewall HA1
+			device_cable(fw_1,fw_2,'port7','port7','607d8b','cat6','HA') 			#firewall HA2
+		
+		if sw_1.model in list(sw24p):
+			device_cable(fw_1,sw_1,'dmz','G1/0/23','3f51b5','cat6','HA') 			#dmz_fw1 to core_1
+			device_cable(fw_2,sw_2,'dmz','G1/0/23','3f51b5','cat6','HA')			#dmz_fw2 to core_2
+		elif sw_1.model in list(sw48p):
+			device_cable(fw_1,sw_1,'dmz','G1/0/23','3f51b5','cat6','HA') 			#dmz_fw1 to core_1
+			device_cable(fw_2,sw_2,'dmz','G1/0/23','3f51b5','cat6','HA')			#dmz_fw2 to core_2
+		
 		device_cable(fw_1,sw_1,'port1','G1/0/1','00bcd4','cat6','PO1')			#PO_fw1
 		device_cable(fw_1,sw_2,'port2','G1/0/1','00bcd4','cat6','PO1')			#PO_fw1
-		device_cable(fw_2,sw_2,'dmz','G1/0/23','3f51b5','cat6','HA')			#dmz_fw2 to core_2
 		device_cable(fw_2,sw_1,'port1','G1/0/2','00bcd4','cat6','PO2')			#PO_fw2
 		device_cable(fw_2,sw_2,'port2','G1/0/2','00bcd4','cat6','PO2')			#PO_fw2
 		device_cable(sw_1,ap_c,'G1/0/3','G1/0/1','3f51b5','cat6','controller')	#aruba controller
@@ -255,9 +267,9 @@ class ProvisionMDevices (Script):
 
 
 # criar devices OK 
-# 		criar devices secundarios
-#			criar chassis
-#				cabear devices 
+# 		criar devices secundarios ok
+#			cabear devices (falta ruckus e cisco stack 9200 e 1000)
+#				criar chassis
 
 # inserir ip nos devices OK
 
@@ -271,9 +283,3 @@ class ProvisionMDevices (Script):
 # Gerar output para criar arquivos????
 # SCRIPT PARA WAN?????
 #SCRIPT PARA POR EM ACTIVE!!
-
-
-
-#cables - precisa colocar type e label? era  bao kkk
-#colors
-# UTP - Indigo - 3f51b5
