@@ -215,7 +215,7 @@ class ProvisionMDevices (Script):
 				cable.save ()
 				self.log_success ("added cable between %s interface %s and %s interface %s" % (device1,if1, device2,if2))
 			except:
-				self.log_info ("cable between %s interface %s and %s interface %s already exists, or interfaces doesn't exists, carryng on" % (device1,if1, device2,if2))
+				self.log_info ("cable between %s interface %s and %s interface %s already exists, or interfaces doesn't exists, carryng on" % (firewallmodel,if1, device2,if2))
 				pass
 		
 		if firewallmodel == 'Fortigate-60F':
