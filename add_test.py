@@ -227,12 +227,18 @@ class ProvisionMDevices (Script):
 	def setup_chassis(self, fw_1, fw_2, sw_1, sw_2, name):
 		def create_chassis(master, slave, name, pos_1, pos_2, pri_1, pri_2):
 			try:
+				virtualchassis = VirtualChassis.objects.get (name = name)
+				self.log_info("Chassis %s already exists, carryng on." % virtualchassis)
+
+				return virtualchassis
+			except virtualchassis.DoesNotExist:
 				virtualchassis = VirtualChassis (
 					name = name,
 					domain = 'ml.com'
 				)
 				virtualchassis.save()
 				self.log_success ("Created chassis %s." % (virtualchassis))
+			try:
 				master.virtual_chassis = virtualchassis
 				master.vc_position = pos_1
 				master.vc_priority = pri_1
