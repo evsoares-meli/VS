@@ -205,9 +205,9 @@ class ProvisionMDevices (Script):
 					site = site,
 					tenant = tenant,
 					name = device_name,
-					device_type = 'cable-guide',
+					device_type = DeviceType.objects.get(name='cable-guide'),
+					device_role= DeviceRole.objects.get(name='cable-guide'),
 					status = devicestatus,
-					device_role = 'cable-guide',
 					rack = rack,
 					face = DeviceFaceChoices.FACE_FRONT
 					)
@@ -366,3 +366,5 @@ class ProvisionMDevices (Script):
 # Gerar output para criar arquivos????
 # SCRIPT PARA WAN?????
 #SCRIPT PARA POR EM ACTIVE!!
+
+
