@@ -205,8 +205,8 @@ class ProvisionMDevices (Script):
 					site = site,
 					tenant = tenant,
 					name = device_name,
-					device_type = DeviceType.objects.get(name='cable-guide'),
-					device_role= DeviceRole.objects.get(name='cable-guide'),
+					device_type = DeviceType.objects.get(slug='cable-guide'),
+					device_role= DeviceRole.objects.get(slug='cable-guide'),
 					status = devicestatus,
 					rack = rack,
 					face = DeviceFaceChoices.FACE_FRONT
