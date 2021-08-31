@@ -200,12 +200,14 @@ class ProvisionMDevices (Script):
 			return device
 	def setup_pp_cg(self,site, tenant, rack, devicestatus):
 		def create_pp_cg(site, tenant, rack, devicestatus,rack_u, device_name):
+				dt = DeviceType.objects.get(slug='cable-guide')
+				dr = DeviceRole.objects.get(slug='cable-guide')
 				device = Device(
 					site = site,
 					tenant = tenant,
 					name = device_name,
-					device_type = DeviceType.objects.get(slug='cable-guide'),
-					device_role= DeviceRole.objects.get(slug='cable-guide'),
+					device_type = dt,
+					device_role = dr,
 					status = devicestatus,
 					rack = rack,
 					face = DeviceFaceChoices.FACE_FRONT
