@@ -344,7 +344,7 @@ class ProvisionMDevices (Script):
 		iap = self.setup_device( site, rack, sitetenant, devicesname, iapmodel, devicestatus, iapmanufacturer, 1)
 		self.setup_chassis(fw, fw2, sw, sw2, devicesname)
 		self.setup_cable(fw, fw2, firewallmodel,sw,sw2,coremodel, coremanufacturer, cam,iap)
-		self.setup_pp_cg(site,sitetenant,rack,devicestatus)
+		#self.setup_pp_cg(site,sitetenant,rack,devicestatus)
 
 
 
