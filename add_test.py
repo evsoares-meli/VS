@@ -198,26 +198,54 @@ class ProvisionMDevices (Script):
 						self.log_info ("Ip %s is already in use for another interface." % (device_mgmt_ip))
 
 			return device
+	def setup_pp_cg(self,site, tenant, rack, devicestatus):
+		def create_pp_cg(site, tenant, rack, devicestatus,rack_u, device_name):
+			try:
+				device = Device(
+					site = site,
+					tenant = tenant,
+					name = device_name,
+					device_type = 'cable-guide',
+					status = devicestatus,
+					device_role = 'cable-guide',
+					rack = rack,
+					face = DeviceFaceChoices.FACE_FRONT
+					)
+				device.save()
+				try:
+					device.position = rack_u
+					device.save()
+				except:
+					pass
+			except:
+				pass
+		rack_u = [29,27,25]
+		device_name = ['CableGuide I','CableGuide II','CableGuide III']
+		for x in range(0, len(rack_u)):
+			create_pp_cg(site, tenant, rack, devicestatus,rack_u[x], device_name[x])
 
 	def setup_chassis(self, fw_1, fw_2, sw_1, sw_2, name):
 		def create_chassis(master, slave, name, pos_1, pos_2, pri_1, pri_2):
-			virtualchassis = VirtualChassis (
-				name = name,
-				domain = 'ml.com'
-			)
-			virtualchassis.save()
-			self.log_success ("Created chassis %s." % (virtualchassis))
-			master.virtual_chassis = virtualchassis
-			master.vc_position = pos_1
-			master.vc_priority = pri_1
-			master.save()
-			virtualchassis.master = master
-			virtualchassis.save()
-			slave.virtual_chassis = virtualchassis
-			slave.vc_position = pos_2
-			slave.vc_priority = pri_2
-			slave.save()
-			self.log_success ("Added %s and %s to virtual chassis %s." % (master, slave, virtualchassis))
+			try:
+				virtualchassis = VirtualChassis (
+					name = name,
+					domain = 'ml.com'
+				)
+				virtualchassis.save()
+				self.log_success ("Created chassis %s." % (virtualchassis))
+				master.virtual_chassis = virtualchassis
+				master.vc_position = pos_1
+				master.vc_priority = pri_1
+				master.save()
+				virtualchassis.master = master
+				virtualchassis.save()
+				slave.virtual_chassis = virtualchassis
+				slave.vc_position = pos_2
+				slave.vc_priority = pri_2
+				slave.save()
+				self.log_success ("Added %s and %s to virtual chassis %s." % (master, slave, virtualchassis))
+			except:
+				self.log_info ("Cannot add virtual chassis between %s and %s, carryng on." % (master, slave))
 
 		name_fw = str(name) + 'FWP001'
 		name_sw = str(name) + 'CRP001'
@@ -316,7 +344,7 @@ class ProvisionMDevices (Script):
 
 # criar devices OK 
 # 		criar devices secundarios ok
-#			cabear devices (falta RUCKUS!!! )
+#			cabear devices ok  NECESSÁRIO RENOMEAR PORTAS!
 #				criar chassis ok
 
 # inserir ip nos devices OK
