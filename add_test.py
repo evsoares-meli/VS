@@ -212,6 +212,7 @@ class ProvisionMDevices (Script):
 					face = DeviceFaceChoices.FACE_FRONT
 					)
 				device.save()
+				self.log_success('Created cable guide %s on %s' % (device, rack))
 				try:
 					device.position = rack_u
 					device.save()
