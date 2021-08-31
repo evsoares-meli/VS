@@ -214,7 +214,7 @@ class ProvisionMDevices (Script):
 				device.save()
 				self.log_success('Created cable guide %s on %s' % (device, rack))
 				try:
-					device.position = rack_u
+					device.position = rack.u_height - rack_u
 					device.save()
 				except:
 					pass
