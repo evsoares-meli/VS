@@ -213,13 +213,13 @@ class ProvisionMDevices (Script):
 					)
 				device.save()
 				self.log_success('Created cable guide %s on %s' % (device, rack))
+			except:
+				pass
 				try:
 					device.position = rack.u_height - rack_u
 					device.save()
 				except:
 					pass
-			except:
-				pass
 		rack_u = [29,27,25]
 		device_name = ['CableGuide I','CableGuide II','CableGuide III']
 		for x in range(0, len(rack_u)):
