@@ -200,7 +200,6 @@ class ProvisionMDevices (Script):
 			return device
 	def setup_pp_cg(self,site, tenant, rack, devicestatus):
 		def create_pp_cg(site, tenant, rack, devicestatus,rack_u, device_name):
-			try:
 				device = Device(
 					site = site,
 					tenant = tenant,
@@ -213,8 +212,6 @@ class ProvisionMDevices (Script):
 					)
 				device.save()
 				self.log_success('Created cable guide %s on %s' % (device, rack))
-			except:
-				pass
 				try:
 					device.position = rack.u_height - rack_u
 					device.save()
